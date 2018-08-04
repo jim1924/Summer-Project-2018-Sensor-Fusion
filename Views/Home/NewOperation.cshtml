@@ -1,0 +1,220 @@
+﻿@model SensorFusion.ViewModels.NewOperationFormModel
+
+@{
+	ViewData["Title"] = "Add new Operation";
+}
+
+
+<div class="container">
+
+	<form class="well form-horizontal" enctype="multipart/form-data" asp-controller="home" asp-action="NewOperation" onsubmit="return validateForm();" method="post" id="NewOperationForm">
+		<fieldset>
+
+			<!-- Form Name -->
+			<legend>Register a new Operation</legend>
+
+			<!-- Select hospital -->
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Select Hospital</label>
+				<div class="col-md-4 selectContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-plus"></i></span>
+						@Html.DropDownListFor(m => m.hospitalID, Model.hospitals,"Select a hospital...", new { id = "HospitalDropDown", @class = "form-control selectpicker", @onchange = "UpdateRooms()" })
+					</div>
+				</div>
+			</div>
+			<!-- Select Room -->
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Operating Room</label>
+				<div class="col-md-4 selectContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+							@Html.DropDownListFor(m => m.roomNo, Model.rooms, new { id = "RoomDropDown", @class = "form-control selectpicker" })
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Select patient -->
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Select Patient</label>
+				<div class="col-md-4 selectContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						@Html.DropDownListFor(m => m.patientID, Model.patients, new { id = "PatientDropDown", @class = "form-control selectpicker" })
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Select staff -->
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Select Staff</label>
+				<div class="col-md-7 selectContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						@Html.ListBoxFor(model => model.staffIDs, Model.staff, new { id = "StaffDropDown", multiple = "multiple" })
+					</div>
+				</div>
+			</div>
+
+			<!-- Select type of operation -->
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Type of Operation</label>
+				<div class="col-md-4 selectContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+						@Html.DropDownListFor(m => m.operationTypeID, Model.typesOfOperation, new { id = "TypeDropDown", @class = "form-control selectpicker" })
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+
+			<!-- Video files upload-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">Upload the video files</label>
+				<div class="col-md-2 inputGroupContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-upload"></i></span>
+
+						<input id="videoFiles" asp-for="videoFiles" type="file" name="videoFiles" multiple />
+					</div>
+				</div>
+			</div>
+
+			<!-- Audio files upload-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">Upload the audio files</label>
+				<div class="col-md-2 inputGroupContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-upload"></i></span>
+
+						<input id="audioFiles" asp-for="audioFiles" type="file" name="audioFiles" multiple />
+					</div>
+				</div>
+			</div>
+
+			<!-- Patients monitoring system upload-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">Upload the patients monitoring system file</label>
+				<div class="col-md-2 inputGroupContainer">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-upload"></i></span>
+
+						<input id="monitor" type="file" name="monitor" multiple />
+					</div>
+				</div>
+			</div>
+
+			<!-- Submit Button -->
+			<div class="form-group">
+				<label class="col-md-4 control-label"></label>
+				<div class="col-md-4">
+					<button type="submit" class="btn btn-warning">Submit and Upload <span class="glyphicon glyphicon-send"></span></button>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>
+
+
+
+
+
+
+@section Scripts{
+	<script>
+		$(function () {
+
+			$("#StaffDropDown").chosen(
+				{
+					width: "100%"
+				});
+			$("#HospitalDropDown").chosen();
+			$("#PatientDropDown").chosen();
+			$("#TypeDropDown").chosen();
+		});
+		function validateForm() {
+			var e = document.getElementById("HospitalDropDown");
+			var selected = e.options[e.selectedIndex].text;
+			if (selected =="Select a hospital...") {
+				alert("Please select a hospital");
+				return false;
+			}
+
+
+
+			//var value = document.getElementById("RoomDropDown").options[document.getElementById("RoomDropDown").selectedIndex].value;
+			var e = document.getElementById("RoomDropDown");
+			var selected = e.options[e.selectedIndex].value;
+			if (selected=="error") {
+				alert("Please select an operating room");
+				return false;
+			}
+			alert("fuck off");
+			return false;
+
+		}
+
+		function UpdateRooms(val) {
+			var hospitalID = document.getElementById('HospitalDropDown').value;
+			$.ajax({
+				type: 'GET',
+				dataType: "JSON",
+				data: { hospitalID },
+				url: '@Url.Action("UpdateRooms", "Dynamic")',
+				success: function (result) {
+					var dropdown = $('#RoomDropDown');
+					dropdown.empty();
+					$.each(result, function (i, room) {
+						dropdown.append($('<option></option>').val(room.roomNO).html(room.roomNO));
+					});
+
+				}
+			});
+
+			
+		}
+
+
+
+
+	</script>
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
