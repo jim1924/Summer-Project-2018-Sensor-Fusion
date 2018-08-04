@@ -44,7 +44,7 @@ namespace SensorFusion.Controllers
 			model.patients = new SelectList(_context.GetAllPatients().Select(x => new SelectListItem { Value = x.patientID.ToString(), Text = x.firstName+" "+ x.lastName }), "Value", "Text");
 			model.hospitals = new SelectList(_context.GetAllHospitals().Select(x => new SelectListItem { Value = x.hospitalID.ToString(), Text = x.name }), "Value", "Text");
 
-			SelectListItem defau = new SelectListItem { Text = "Please Select a room...", Value = "error", Selected = true };
+			SelectListItem defau = new SelectListItem { Text = "Please select a room...", Value = "error", Selected = true };
 			List<SelectListItem> defaultSelection=new List<SelectListItem>();
 			defaultSelection.Add(defau);
 			model.rooms = defaultSelection;
@@ -185,7 +185,7 @@ namespace SensorFusion.Controllers
 			MediaUtilities.CleanTempFolder(_hostingEnvironment);
 
 
-			//_context.InsertOperation(model);
+			_context.InsertOperation(model);
 
 
 

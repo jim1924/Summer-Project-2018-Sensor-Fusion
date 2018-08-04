@@ -228,8 +228,8 @@ namespace SensorFusion.Models
 			{
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand("INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID) " +
-				"VALUES ("+model.patientID+","+model.hospitalID+",'"+model.roomNo+"',"+model+");", conn);
-
+				"VALUES ("+model.patientID+","+model.hospitalID+",'"+model.roomNo+"',"+model.date+","+model.maxDuration+","+model.operationTypeID+");", conn);
+				cmd.ExecuteReader();	
 			}
 
 

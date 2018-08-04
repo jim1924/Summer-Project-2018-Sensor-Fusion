@@ -44,7 +44,7 @@
 				<div class="col-md-4 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-						@Html.DropDownListFor(m => m.patientID, Model.patients, new { id = "PatientDropDown", @class = "form-control selectpicker" })
+						@Html.DropDownListFor(m => m.patientID, Model.patients, "Select a patient...", new { id = "PatientDropDown", @class = "form-control selectpicker" })
 					</div>
 				</div>
 			</div>
@@ -57,7 +57,7 @@
 				<div class="col-md-7 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-						@Html.ListBoxFor(model => model.staffIDs, Model.staff, new { id = "StaffDropDown", multiple = "multiple" })
+						@Html.DropDownListFor(model => model.staffIDs, Model.staff, new { id = "StaffDropDown", multiple = "multiple" })
 					</div>
 				</div>
 			</div>
@@ -69,7 +69,7 @@
 				<div class="col-md-4 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-						@Html.DropDownListFor(m => m.operationTypeID, Model.typesOfOperation, new { id = "TypeDropDown", @class = "form-control selectpicker" })
+						@Html.DropDownListFor(m => m.operationTypeID, Model.typesOfOperation, "Select the operation type...", new { id = "TypeDropDown", @class = "form-control selectpicker" })
 					</div>
 				</div>
 			</div>
@@ -152,17 +152,32 @@
 				return false;
 			}
 
-
-
-			//var value = document.getElementById("RoomDropDown").options[document.getElementById("RoomDropDown").selectedIndex].value;
 			var e = document.getElementById("RoomDropDown");
 			var selected = e.options[e.selectedIndex].value;
 			if (selected=="error") {
 				alert("Please select an operating room");
 				return false;
 			}
-			alert("fuck off");
-			return false;
+
+			var e = document.getElementById("PatientDropDown");
+			var selected = e.options[e.selectedIndex].text;
+			if (selected == "Select a patient...") {
+				alert("Please select a patient");
+				return false;
+			}
+			var e = document.getElementById("TypeDropDown");
+			var selected = e.options[e.selectedIndex].text;
+			if (selected == "Select the operation type...") {
+				alert("Please select the type of the operation");
+				return false;
+			}
+			return true;
+
+
+
+
+
+
 
 		}
 
@@ -176,6 +191,7 @@
 				success: function (result) {
 					var dropdown = $('#RoomDropDown');
 					dropdown.empty();
+					dropdown.append($('<option></option>').val("error").html("Please select a room..."));
 					$.each(result, function (i, room) {
 						dropdown.append($('<option></option>').val(room.roomNO).html(room.roomNO));
 					});
