@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SensorFusion.Models
 {
-    public class DBContext
-    {
+	public class DBContext
+	{
 		public string ConnectionString { get; set; }
 
 		public DBContext(string connectionString)
@@ -85,14 +85,14 @@ namespace SensorFusion.Models
 			{
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand("SELECT Auto_increment FROM information_schema.tables WHERE table_name='operation'", conn);
-			using (MySqlDataReader reader = cmd.ExecuteReader())
-			{
-				while (reader.Read())
+				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
-						next=reader.GetInt64("Auto_increment");
+					while (reader.Read())
+					{
+						next = reader.GetInt64("Auto_increment");
 
+					}
 				}
-			}
 			}
 			return next;
 
@@ -146,14 +146,16 @@ namespace SensorFusion.Models
 			using (MySqlConnection conn = GetConnection())
 			{
 				conn.Open();
-				MySqlCommand cmd = new MySqlCommand("SELECT * FROM Patient", conn);
+				Console.WriteLine("connection opened");
+				MySqlCommand cmd = new MySqlCommand("SELECT * FROM patient", conn);
+				Console.WriteLine("SQL query submited");
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
 					{
 						list.Add(new Patient()
 						{
-							patientID=reader.GetInt64("patientID"),
+							patientID = reader.GetInt64("patientID"),
 							firstName = reader.GetString("firstName"),
 							lastName = reader.GetString("lastName"),
 							address = reader.GetString("address"),
@@ -163,8 +165,8 @@ namespace SensorFusion.Models
 					}
 				}
 			}
-			return list;
 
+			return list;
 		}
 
 		public List<OperatingRoom> UpdateRooms(int hospitalID)
@@ -176,16 +178,16 @@ namespace SensorFusion.Models
 			using (MySqlConnection conn = GetConnection())
 			{
 				conn.Open();
-				MySqlCommand cmd = new MySqlCommand("SELECT * FROM hospital_operating_room WHERE hospitalID='"+hospitalID+"'" , conn);
+				MySqlCommand cmd = new MySqlCommand("SELECT * FROM hospital_operating_room WHERE hospitalID='" + hospitalID + "'", conn);
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
 					{
 						list.Add(new OperatingRoom()
 						{
-							hospitalID=reader.GetInt32("hospitalID"),
-							roomNO=reader.GetString("roomNO"),
-							size=reader.GetInt32("size_m2")
+							hospitalID = reader.GetInt32("hospitalID"),
+							roomNO = reader.GetString("roomNO"),
+							size = reader.GetInt32("size_m2")
 
 						});
 					}
@@ -228,8 +230,8 @@ namespace SensorFusion.Models
 			{
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand("INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID) " +
-				"VALUES ("+model.patientID+","+model.hospitalID+",'"+model.roomNo+"',"+model.date+","+model.maxDuration+","+model.operationTypeID+");", conn);
-				cmd.ExecuteReader();	
+				"VALUES (" + model.patientID + "," + model.hospitalID + ",'" + model.roomNo + "'," + model + ");", conn);
+
 			}
 
 

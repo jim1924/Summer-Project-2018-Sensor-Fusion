@@ -44,6 +44,8 @@
 				<div class="col-md-4 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+
+
 						@Html.DropDownListFor(m => m.patientID, Model.patients, "Select a patient...", new { id = "PatientDropDown", @class = "form-control selectpicker" })
 					</div>
 				</div>
