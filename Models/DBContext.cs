@@ -228,11 +228,6 @@ namespace SensorFusion.Models
 		{
 			using (MySqlConnection conn = GetConnection())
 			{
-				//MySqlCommand cmd2 = new MySqlCommand("INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID) VALUES (1,1,'101','2011-06-13 15:34:32',12345,1)",conn);
-				////cmd2.ExecuteNonQuery();
-
-
-
 				conn.Open();
 				//insert the operation to the database
 				MySqlCommand cmd = conn.CreateCommand();
@@ -245,6 +240,7 @@ namespace SensorFusion.Models
 				cmd.Parameters.AddWithValue("?maxDuration", model.maxDuration);
 				cmd.Parameters.AddWithValue("?operationTypeID", model.operationTypeID);
 				cmd.ExecuteNonQuery();
+				cmd.Parameters.Clear();
 
 				long operationID=0;
 				cmd.CommandText = "SELECT `AUTO_INCREMENT`from  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'sensor_fusionv1' AND   TABLE_NAME   = 'operation'";
@@ -268,6 +264,8 @@ namespace SensorFusion.Models
 						cmd.Parameters.AddWithValue("?duration", video.duration);
 						cmd.Parameters.AddWithValue("?fileName", video.fileName);
 						cmd.ExecuteNonQuery();
+						cmd.Parameters.Clear();
+
 					}
 
 				}
@@ -275,6 +273,7 @@ namespace SensorFusion.Models
 				{
 					foreach (var audio in model.audios)
 					{
+						Console.WriteLine(audio.fileName);
 						cmd.CommandText = "INSERT INTO audio (operationID,size_bytes,timeStamp,type,duration,fileName) VALUES (?operationID,?size_bytes,?timeStamp,?type,?duration,?fileName)";
 						cmd.Parameters.AddWithValue("?operationID", operationID);
 						cmd.Parameters.AddWithValue("?size_bytes", audio.size_bytes);
@@ -283,14 +282,18 @@ namespace SensorFusion.Models
 						cmd.Parameters.AddWithValue("?duration", audio.duration);
 						cmd.Parameters.AddWithValue("?fileName", audio.fileName);
 						cmd.ExecuteNonQuery();
+						cmd.Parameters.Clear();
+
 					}
 				}
 
 				foreach (var id in model.staffIDs)
 				{
 					cmd.CommandText = "INSERT INTO operations_staff (operationID,staffID) VALUES (?operationID,?staffID)";
+					cmd.Parameters.AddWithValue("?staffID", id);
 					cmd.Parameters.AddWithValue("?operationID", operationID);
 					cmd.ExecuteNonQuery();
+					cmd.Parameters.Clear();
 				}
 
 

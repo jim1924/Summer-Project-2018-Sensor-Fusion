@@ -70,6 +70,7 @@ namespace SensorFusion.Controllers
 			if (model.videoFiles!=null)
 			{
 				int i = 1;
+				model.videos = new List<Video>();
 				foreach (var VideoFile in model.videoFiles)
 				{
 					if (VideoFile.Length > 0)
@@ -89,7 +90,6 @@ namespace SensorFusion.Controllers
 							await VideoFile.CopyToAsync(fileStream);
 						}
 
-						model.videos = new List<Video>();
 
 						model.videos.Add(new Video() {
 							OperationID = nextID,
@@ -127,6 +127,7 @@ namespace SensorFusion.Controllers
 			if (model.audioFiles != null)
 			{
 				int i = 1;
+				model.audios = new List<Audio>();
 				foreach (var audioFile in model.audioFiles)
 				{
 					if (audioFile.Length > 0)
@@ -148,7 +149,6 @@ namespace SensorFusion.Controllers
 						}
 
 
-						model.audios = new List<Audio>();
 
 						model.audios.Add(new Audio()
 						{
@@ -188,7 +188,7 @@ namespace SensorFusion.Controllers
 			MediaUtilities.CleanTempFolder(_hostingEnvironment);
 
 
-			//_context.InsertOperation(model);
+			_context.InsertOperation(model);
 
 
 
