@@ -146,9 +146,7 @@ namespace SensorFusion.Models
 			using (MySqlConnection conn = GetConnection())
 			{
 				conn.Open();
-				Console.WriteLine("connection opened");
 				MySqlCommand cmd = new MySqlCommand("SELECT * FROM patient", conn);
-				Console.WriteLine("SQL query submited");
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
@@ -196,6 +194,8 @@ namespace SensorFusion.Models
 			return list;
 
 		}
+
+
 		public List<OperatingRoom> NewOperation(NewOperationFormModel model)
 		{
 
@@ -228,9 +228,74 @@ namespace SensorFusion.Models
 		{
 			using (MySqlConnection conn = GetConnection())
 			{
+				//MySqlCommand cmd2 = new MySqlCommand("INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID) VALUES (1,1,'101','2011-06-13 15:34:32',12345,1)",conn);
+				////cmd2.ExecuteNonQuery();
+
+
+
 				conn.Open();
-				MySqlCommand cmd = new MySqlCommand("INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID) " +
-				"VALUES (" + model.patientID + "," + model.hospitalID + ",'" + model.roomNo + "'," + model + ");", conn);
+				//insert the operation to the database
+				MySqlCommand cmd = conn.CreateCommand();
+				cmd.CommandText = "INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID) VALUES (?patientID,?hospitalID,?roomNo,?date,?maxDuration,?operationTypeID)";
+
+				cmd.Parameters.AddWithValue("?patientID", model.patientID);
+				cmd.Parameters.AddWithValue("?hospitalID", model.hospitalID);
+				cmd.Parameters.AddWithValue("?roomNO", model.roomNo);
+				cmd.Parameters.AddWithValue("?date", model.date.ToString("yyyy-MM-dd HH:mm:ss"));
+				cmd.Parameters.AddWithValue("?maxDuration", model.maxDuration);
+				cmd.Parameters.AddWithValue("?operationTypeID", model.operationTypeID);
+				cmd.ExecuteNonQuery();
+
+				long operationID=0;
+				cmd.CommandText = "SELECT `AUTO_INCREMENT`from  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'sensor_fusionv1' AND   TABLE_NAME   = 'operation'";
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						operationID = reader.GetInt64("AUTO_INCREMENT") - 1;
+					}
+				}
+
+				if (model.videos!=null)
+				{
+					foreach (var video in model.videos)
+					{
+						cmd.CommandText = "INSERT INTO video (operationID,size_bytes,timeStamp,type,duration,fileName) VALUES (?operationID,?size_bytes,?timeStamp,?type,?duration,?fileName)";
+						cmd.Parameters.AddWithValue("?operationID", operationID);
+						cmd.Parameters.AddWithValue("?size_bytes", video.size_bytes);
+						cmd.Parameters.AddWithValue("?timeStamp", video.timeStamp);
+						cmd.Parameters.AddWithValue("?type", video.type);
+						cmd.Parameters.AddWithValue("?duration", video.duration);
+						cmd.Parameters.AddWithValue("?fileName", video.fileName);
+						cmd.ExecuteNonQuery();
+					}
+
+				}
+				if (model.audios != null)
+				{
+					foreach (var audio in model.audios)
+					{
+						cmd.CommandText = "INSERT INTO audio (operationID,size_bytes,timeStamp,type,duration,fileName) VALUES (?operationID,?size_bytes,?timeStamp,?type,?duration,?fileName)";
+						cmd.Parameters.AddWithValue("?operationID", operationID);
+						cmd.Parameters.AddWithValue("?size_bytes", audio.size_bytes);
+						cmd.Parameters.AddWithValue("?timeStamp", audio.timeStamp);
+						cmd.Parameters.AddWithValue("?type", audio.type);
+						cmd.Parameters.AddWithValue("?duration", audio.duration);
+						cmd.Parameters.AddWithValue("?fileName", audio.fileName);
+						cmd.ExecuteNonQuery();
+					}
+				}
+
+				foreach (var id in model.staffIDs)
+				{
+					cmd.CommandText = "INSERT INTO operations_staff (operationID,staffID) VALUES (?operationID,?staffID)";
+					cmd.Parameters.AddWithValue("?operationID", operationID);
+					cmd.ExecuteNonQuery();
+				}
+
+
+
+
 
 			}
 

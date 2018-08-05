@@ -188,7 +188,7 @@ namespace SensorFusion.Controllers
 			MediaUtilities.CleanTempFolder(_hostingEnvironment);
 
 
-			_context.InsertOperation(model);
+			//_context.InsertOperation(model);
 
 
 
