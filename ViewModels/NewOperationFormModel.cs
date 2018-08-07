@@ -27,6 +27,7 @@ namespace SensorFusion.ViewModels
 		public int hospitalID { get; set; }
 		public int[] staffIDs { get; set; }
 		public int operationTypeID { get; set; }
+		public DateTime UploadedDate  { get; set; }
 
 		//for manipulating
 		public List<Video> videos { get; set; }

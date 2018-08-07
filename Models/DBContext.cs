@@ -226,12 +226,14 @@ namespace SensorFusion.Models
 
 		internal void InsertOperation(NewOperationFormModel model)
 		{
+			model.UploadedDate = new DateTime();
+			model.UploadedDate = DateTime.Now;
 			using (MySqlConnection conn = GetConnection())
 			{
 				conn.Open();
 				//insert the operation to the database
 				MySqlCommand cmd = conn.CreateCommand();
-				cmd.CommandText = "INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID) VALUES (?patientID,?hospitalID,?roomNo,?date,?maxDuration,?operationTypeID)";
+				cmd.CommandText = "INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID,uploadedDate) VALUES (?patientID,?hospitalID,?roomNo,?date,?maxDuration,?operationTypeID,?uploadedDate)";
 
 				cmd.Parameters.AddWithValue("?patientID", model.patientID);
 				cmd.Parameters.AddWithValue("?hospitalID", model.hospitalID);
@@ -239,6 +241,7 @@ namespace SensorFusion.Models
 				cmd.Parameters.AddWithValue("?date", model.date.ToString("yyyy-MM-dd HH:mm:ss"));
 				cmd.Parameters.AddWithValue("?maxDuration", model.maxDuration);
 				cmd.Parameters.AddWithValue("?operationTypeID", model.operationTypeID);
+				cmd.Parameters.AddWithValue("?operationTypeID", model.UploadedDate.ToString("yyyy-MM-dd HH:mm:ss"));
 				cmd.ExecuteNonQuery();
 				cmd.Parameters.Clear();
 

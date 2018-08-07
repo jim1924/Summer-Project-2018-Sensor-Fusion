@@ -1,4 +1,296 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model SensorFusion.ViewModels.NewOperationFormModel
+
+@{
+	ViewData["Title"] = "Home Page";
 }
 
+
+<!--===============================================================================================-->
+<link rel="icon" type="image/png" href="~/Table_Fixed_Header/images/icons/favicon.ico" />
+<!--===============================================================================================-->
+@*<link rel="stylesheet" type="text/css" href="~/Table_Fixed_Header/vendor/bootstrap/css/bootstrap.min.css">*@
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="~/Table_Fixed_Header/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="~/Table_Fixed_Header/vendor/animate/animate.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="~/Table_Fixed_Header/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="~/Table_Fixed_Header/vendor/perfect-scrollbar/perfect-scrollbar.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="~/Table_Fixed_Header/css/util.css">
+<link rel="stylesheet" type="text/css" href="~/Table_Fixed_Header/css/main.css">
+<!--===============================================================================================-->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+
+
+<body>
+
+
+
+	<div class="container">
+		<div class="search">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-section">
+							<div class="row">
+								<form role="form">
+									<div class="col-md-3">
+										<div class="form-group">
+											<div class="serchtile">Hospital</div>
+											<label class="sr-only" for="looking">Hospital</label>
+											@Html.DropDownListFor(m => m.hospitalID, Model.hospitals, "Select a hospital...", new { id = "HospitalDropDown", @class = "form-control selectpicker", @onchange = "UpdateRooms()" })
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											<div class="serchtile">Room Number</div>
+											<label class="sr-only" for="looking">Room Number</label>
+											@Html.DropDownListFor(m => m.roomNo, Model.rooms, new { id = "RoomDropDown", @class = "form-control selectpicker" })
+										</div>
+									</div>
+									<div class="col-md-2">
+										<div class="form-group">
+											<div class="serchtile">Operation From</div>
+											<div class='input-group date' id='fromDate'>
+												<input type='date' name="fromDate" class="form-control" />
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2">
+										<div class="form-group">
+											<div class="serchtile">Operation To</div>
+											<div class='input-group date' id='ToDate'>
+												<input type='date' name="toDate" class="form-control" />
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="col-md-7">
+											<div class="serchtile">Staff</div>
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+												@Html.DropDownListFor(model => model.staffIDs, Model.staff, new { id = "StaffDropDown", multiple = "multiple" })
+											</div>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											<div class="serchtile">Patient</div>
+											<label class="sr-only" for="looking">Patient</label>
+											@Html.DropDownListFor(m => m.patientID, Model.patients, "Select a patient...", new { id = "PatientDropDown", @class = "form-control selectpicker" })
+										</div>
+									</div>
+
+									<div class="col-md-2">
+										<br>
+										<button type="submit" class="btn btn-default btn-primary">Search</button>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<style>
+
+		.search .form-section {
+			background: rgba(0,0,0,0.6);
+			border: 2px solid #414141;
+			border-radius: 5px;
+			padding: 10px;
+		}
+
+		.serchtile {
+			color: #fff;
+		}
+	</style>
+
+
+
+
+
+	<div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100 ver5 m-b-110">
+					<div class="table100-head">
+						<table>
+							<thead>
+								<tr class="row100 head">
+									<th class="cell100 column1">Class name</th>
+									<th class="cell100 column2">Type</th>
+									<th class="cell100 column3">Hours</th>
+									<th class="cell100 column4">Trainer</th>
+									<th class="cell100 column5">Spots</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+
+					<div class="table100-body js-pscroll">
+						<table>
+							<tbody>
+								<tr class="row100 body">
+									<td class="cell100 column1">Like a butterfly</td>
+									<td class="cell100 column2">Boxing</td>
+									<td class="cell100 column3">9:00 AM - 11:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+
+								<tr class="row100 body">
+									<td class="cell100 column1">Mind & Body</td>
+									<td class="cell100 column2">Yoga</td>
+									<td class="cell100 column3">8:00 AM - 9:00 AM</td>
+									<td class="cell100 column4">Adam Stewart</td>
+									<td class="cell100 column5">15</td>
+								</tr>
+
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+								<tr class="row100 body">
+									<td class="cell100 column1">Crit Cardio</td>
+									<td class="cell100 column2">Gym</td>
+									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
+									<td class="cell100 column4">Aaron Chapman</td>
+									<td class="cell100 column5">10</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+
+
+@section Scripts{
+
+
+
+	<script>
+		$(function () {
+
+			$("#StaffDropDown").chosen(
+				{
+					width: "100%"
+				});
+			$("#HospitalDropDown").chosen();
+			$("#PatientDropDown").chosen();
+			$("#TypeDropDown").chosen();
+		});
+
+
+		function UpdateRooms(val)
+		{
+			var hospitalID = document.getElementById('HospitalDropDown').value;
+			$.ajax({
+			type: 'GET',
+			dataType: "JSON",
+			data: { hospitalID },
+			url: '@Url.Action("UpdateRooms", "Dynamic")',
+			success: function (result) {
+			var dropdown = $('#RoomDropDown');
+			dropdown.empty();
+			dropdown.append($('<option></option>').val("error").html("Please select a room..."));
+			$.each(result, function (i, room) {
+			dropdown.append($('<option></option>').val(room.roomNO).html(room.roomNO));
+			});
+
+			}
+			});
+		}
+	</script>
+
+
+
+
+
+
+
+
+
+}

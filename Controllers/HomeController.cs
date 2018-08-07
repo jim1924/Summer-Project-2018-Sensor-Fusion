@@ -24,16 +24,37 @@ namespace SensorFusion.Controllers
 			_context = context;
 			_hostingEnvironment = environment;
 		}
-        public IActionResult Index()
+
+		[HttpGet]
+		public IActionResult Index()
         {
-            return View();
-        }
+			var model = new NewOperationFormModel();
+
+			model.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
+			model.staff = new SelectList(_context.GetAllStaff().Select(x => new SelectListItem { Value = x.staffID.ToString(), Text = "ID: " + x.staffID + " " + x.firstName + " " + x.lastName }), "Value", "Text");
+			model.hospitals = new SelectList(_context.GetAllHospitals().Select(x => new SelectListItem { Value = x.hospitalID.ToString(), Text = x.name }), "Value", "Text");
+			model.patients = new SelectList(_context.GetAllPatients().Select(x => new SelectListItem { Value = x.patientID.ToString(), Text = x.firstName + " " + x.lastName }), "Value", "Text");
+
+
+			SelectListItem defau = new SelectListItem { Text = "Please select a room...", Value = "error", Selected = true };
+			List<SelectListItem> defaultSelection = new List<SelectListItem>();
+			defaultSelection.Add(defau);
+			model.rooms = defaultSelection;
+			return View(model);
+		}
+
+
+
+		[HttpPost]
+		public IActionResult Index(NewOperationFormModel model)
+		{
+			return View();
+		}
 
 
 		[HttpGet]
 		public IActionResult NewOperation()
         {
-            ViewData["Message"] = "Your application description page.";
 			var model = new NewOperationFormModel();
 
 			model.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
@@ -61,7 +82,10 @@ namespace SensorFusion.Controllers
 		public async Task<IActionResult> NewOperation(NewOperationFormModel model )
 		{
 			BlobsController storage = new BlobsController(_hostingEnvironment);
-			
+
+
+
+
 			var path = _hostingEnvironment.WebRootPath;
 			long nextID =_context.GetNextOperationID();
 			string containerName = "operation" + nextID;
