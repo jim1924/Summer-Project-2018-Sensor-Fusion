@@ -20,7 +20,7 @@
 				<div class="col-md-4 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-plus"></i></span>
-						@Html.DropDownListFor(m => m.hospitalID, Model.hospitals,"Select a hospital...", new { id = "HospitalDropDown", @class = "form-control selectpicker", @onchange = "UpdateRooms()" })
+						@Html.DropDownListFor(m => m.hospitalID, Model.hospitals, "Select a hospital...", new { id = "HospitalDropDown", @class = "form-control selectpicker", @onchange = "UpdateRooms()" })
 					</div>
 				</div>
 			</div>
@@ -31,7 +31,7 @@
 				<div class="col-md-4 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-							@Html.DropDownListFor(m => m.roomNo, Model.rooms, new { id = "RoomDropDown", @class = "form-control selectpicker" })
+						@Html.DropDownListFor(m => m.roomNo, Model.rooms, new { id = "RoomDropDown", @class = "form-control selectpicker" })
 					</div>
 				</div>
 			</div>
@@ -44,8 +44,6 @@
 				<div class="col-md-4 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-
-
 						@Html.DropDownListFor(m => m.patientID, Model.patients, "Select a patient...", new { id = "PatientDropDown", @class = "form-control selectpicker" })
 					</div>
 				</div>
@@ -130,7 +128,7 @@
 </div>
 
 
-
+@Html.Raw(TempData["msg"])
 
 
 
@@ -174,13 +172,6 @@
 				return false;
 			}
 			return true;
-
-
-
-
-
-
-
 		}
 
 		function UpdateRooms(val) {
@@ -201,7 +192,7 @@
 				}
 			});
 
-			
+
 		}
 
 

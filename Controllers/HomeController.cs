@@ -25,22 +25,25 @@ namespace SensorFusion.Controllers
 			_hostingEnvironment = environment;
 		}
 
+
 		[HttpGet]
 		public IActionResult Index()
         {
-			var model = new NewOperationFormModel();
+			var searchOperationModel = new SearchOperationModel();
 
-			model.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
-			model.staff = new SelectList(_context.GetAllStaff().Select(x => new SelectListItem { Value = x.staffID.ToString(), Text = "ID: " + x.staffID + " " + x.firstName + " " + x.lastName }), "Value", "Text");
-			model.hospitals = new SelectList(_context.GetAllHospitals().Select(x => new SelectListItem { Value = x.hospitalID.ToString(), Text = x.name }), "Value", "Text");
-			model.patients = new SelectList(_context.GetAllPatients().Select(x => new SelectListItem { Value = x.patientID.ToString(), Text = x.firstName + " " + x.lastName }), "Value", "Text");
-
-
+			var newOperationModel = new NewOperationFormModel();
+			newOperationModel.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
+			newOperationModel.staff = new SelectList(_context.GetAllStaff().Select(x => new SelectListItem { Value = x.staffID.ToString(), Text = "ID: " + x.staffID + " " + x.firstName + " " + x.lastName }), "Value", "Text");
+			newOperationModel.hospitals = new SelectList(_context.GetAllHospitals().Select(x => new SelectListItem { Value = x.hospitalID.ToString(), Text = x.name }), "Value", "Text");
+			newOperationModel.patients = new SelectList(_context.GetAllPatients().Select(x => new SelectListItem { Value = x.patientID.ToString(), Text = "ID: " + x.patientID +" "+ x.firstName + " " + x.lastName }), "Value", "Text");
 			SelectListItem defau = new SelectListItem { Text = "Please select a room...", Value = "error", Selected = true };
 			List<SelectListItem> defaultSelection = new List<SelectListItem>();
 			defaultSelection.Add(defau);
-			model.rooms = defaultSelection;
-			return View(model);
+			newOperationModel.rooms = defaultSelection;
+			searchOperationModel.ViewOperations = _context.Get20MostRecentOperations();
+			searchOperationModel.searchFields = newOperationModel;
+
+			return View(searchOperationModel);
 		}
 
 
@@ -58,16 +61,9 @@ namespace SensorFusion.Controllers
 			var model = new NewOperationFormModel();
 
 			model.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
-
-
-
 			model.staff = new SelectList(_context.GetAllStaff().Select(x => new SelectListItem { Value = x.staffID.ToString(), Text ="ID: "+ x.staffID+ " "+x.firstName +" "+ x.lastName }), "Value", "Text");
-
 			model.hospitals = new SelectList(_context.GetAllHospitals().Select(x => new SelectListItem { Value = x.hospitalID.ToString(), Text = x.name }), "Value", "Text");
-
-			model.patients = new SelectList(_context.GetAllPatients().Select(x => new SelectListItem { Value = x.patientID.ToString(), Text = x.firstName+" "+ x.lastName }), "Value", "Text");
-
-
+			model.patients = new SelectList(_context.GetAllPatients().Select(x => new SelectListItem { Value = x.patientID.ToString(), Text ="ID: "+x.patientID+" "+  x.firstName+" "+ x.lastName }), "Value", "Text");
 			SelectListItem defau = new SelectListItem { Text = "Please select a room...", Value = "error", Selected = true };
 			List<SelectListItem> defaultSelection=new List<SelectListItem>();
 			defaultSelection.Add(defau);
@@ -214,9 +210,9 @@ namespace SensorFusion.Controllers
 
 			_context.InsertOperation(model);
 
+			TempData["msg"] = "<script>alert('Operation has been added successfully');</script>";
 
 
-			ViewData["Message"] = "Your application description page.";
 			return RedirectToAction(nameof(Index));
 
 		}

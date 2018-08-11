@@ -100,6 +100,80 @@ namespace SensorFusion.Models
 
 		}
 
+		public IEnumerable<SingleOperationViewModel> Get20MostRecentOperations()
+		{
+
+			List<SingleOperationViewModel> list = new List<SingleOperationViewModel>();
+
+
+			using (MySqlConnection conn = GetConnection())
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(
+				"select twentyoperations.operationID,hospital.name AS 'Hospital Name',hospital_operating_room.roomNO,twentyoperations.dateStamp,patient.firstName AS 'Patients first name',patient.lastName AS 'Patients last name',patient.patientID " +
+				" from twentyoperations inner join hospital ON twentyoperations.hospitalID = hospital.hospitalID 		" +
+				" inner join hospital_operating_room ON twentyoperations.roomNO = hospital_operating_room.roomNO" +
+				" inner join patient ON twentyoperations.patientID = patient.patientID ", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						SingleOperationViewModel operation = new SingleOperationViewModel();
+						operation.date = (DateTime) reader.GetMySqlDateTime("dateStamp");
+						operation.hospitalName = reader.GetString("Hospital Name");
+						operation.operationID = reader.GetInt64("operationID");
+						operation.patient = new Patient();
+						operation.patient.firstName = reader.GetString("Patients first name");
+						operation.patient.lastName = reader.GetString("Patients last name");
+						operation.patient.patientID=reader.GetInt64("patientID");
+						operation.roomNO = reader.GetString("roomNO");
+
+						operation.staff = new List<Staff>();
+						operation.staff = GetStaffForOperationID(operation.operationID);
+						list.Add(operation);
+					}
+				}
+			}
+
+			return list;
+		}
+
+
+		public List<Staff> GetStaffForOperationID(long id)
+		{
+			List<SingleOperationViewModel> list = new List<SingleOperationViewModel>();
+
+
+			using (MySqlConnection conn = GetConnection())
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(
+				"select twentyoperations.operationID,hospital.name AS 'HoD ", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						SingleOperationViewModel operation = new SingleOperationViewModel();
+						operation.date = (DateTime)reader.GetMySqlDateTime("dateStamp");
+						operation.hospitalName = reader.GetString("Hospital Name");
+						operation.operationID = reader.GetInt64("operationID");
+						operation.patient = new Patient();
+						operation.patient.firstName = reader.GetString("Patients first name");
+						operation.patient.lastName = reader.GetString("Patients last name");
+						operation.patient.patientID = reader.GetInt64("patientID");
+						operation.roomNO = reader.GetString("roomNO");
+
+						operation.staff = new List<Staff>();
+						operation.staff = GetStaffForOperationID(operation.operationID);
+						list.Add(operation);
+					}
+				}
+			}
+
+			return list;
+
+		}
+
 		public IEnumerable<Staff> GetAllStaff()
 		{
 			List<Staff> list = new List<Staff>();
@@ -241,7 +315,7 @@ namespace SensorFusion.Models
 				cmd.Parameters.AddWithValue("?date", model.date.ToString("yyyy-MM-dd HH:mm:ss"));
 				cmd.Parameters.AddWithValue("?maxDuration", model.maxDuration);
 				cmd.Parameters.AddWithValue("?operationTypeID", model.operationTypeID);
-				cmd.Parameters.AddWithValue("?operationTypeID", model.UploadedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+				cmd.Parameters.AddWithValue("?uploadedDate", model.UploadedDate.ToString("yyyy-MM-dd HH:mm:ss"));
 				cmd.ExecuteNonQuery();
 				cmd.Parameters.Clear();
 

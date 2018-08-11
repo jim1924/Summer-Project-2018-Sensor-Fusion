@@ -1,4 +1,4 @@
-﻿@model SensorFusion.ViewModels.NewOperationFormModel
+﻿@model SensorFusion.ViewModels.SearchOperationModel
 
 @{
 	ViewData["Title"] = "Home Page";
@@ -42,14 +42,14 @@
 										<div class="form-group">
 											<div class="serchtile">Hospital</div>
 											<label class="sr-only" for="looking">Hospital</label>
-											@Html.DropDownListFor(m => m.hospitalID, Model.hospitals, "Select a hospital...", new { id = "HospitalDropDown", @class = "form-control selectpicker", @onchange = "UpdateRooms()" })
+											@Html.DropDownListFor(m => m.searchFields.hospitalID, Model.searchFields.hospitals, "Select a hospital...", new { id = "HospitalDropDown", @class = "form-control selectpicker", @onchange = "UpdateRooms()" })
 										</div>
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
 											<div class="serchtile">Room Number</div>
 											<label class="sr-only" for="looking">Room Number</label>
-											@Html.DropDownListFor(m => m.roomNo, Model.rooms, new { id = "RoomDropDown", @class = "form-control selectpicker" })
+											@Html.DropDownListFor(m => m.searchFields.roomNo, Model.searchFields.rooms, new { id = "RoomDropDown", @class = "form-control selectpicker" })
 										</div>
 									</div>
 									<div class="col-md-2">
@@ -80,7 +80,7 @@
 											<div class="serchtile">Staff</div>
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-												@Html.DropDownListFor(model => model.staffIDs, Model.staff, new { id = "StaffDropDown", multiple = "multiple" })
+												@Html.DropDownListFor(model => model.searchFields.staffIDs, Model.searchFields.staff, new { id = "StaffDropDown", multiple = "multiple" })
 											</div>
 										</div>
 									</div>
@@ -88,7 +88,7 @@
 										<div class="form-group">
 											<div class="serchtile">Patient</div>
 											<label class="sr-only" for="looking">Patient</label>
-											@Html.DropDownListFor(m => m.patientID, Model.patients, "Select a patient...", new { id = "PatientDropDown", @class = "form-control selectpicker" })
+											@Html.DropDownListFor(m => m.searchFields.patientID, Model.searchFields.patients, "Select a patient...", new { id = "PatientDropDown", @class = "form-control selectpicker" })
 										</div>
 									</div>
 
@@ -135,10 +135,10 @@
 						<table>
 							<thead>
 								<tr class="row100 head">
-									<th class="cell100 column1">Class name</th>
-									<th class="cell100 column2">Type</th>
-									<th class="cell100 column3">Hours</th>
-									<th class="cell100 column4">Trainer</th>
+									<th class="cell100 column1">Hospital</th>
+									<th class="cell100 column2">OR number</th>
+									<th class="cell100 column3">Date</th>
+									<th class="cell100 column4">Patient</th>
 									<th class="cell100 column5">Spots</th>
 								</tr>
 							</thead>
@@ -148,6 +148,22 @@
 					<div class="table100-body js-pscroll">
 						<table>
 							<tbody>
+
+								@foreach (var operation in Model.ViewOperations)
+								{
+									<tr class="row100 body">
+										<td class="cell100 column3">@operation.hospitalName</td>
+										<td class="cell100 column2">@operation.roomNO</td>
+										<td class="cell100 column3">@operation.patient.firstName   @operation.patient.lastName</td>
+									</tr>
+								}
+
+
+
+
+
+
+
 								<tr class="row100 body">
 									<td class="cell100 column1">Like a butterfly</td>
 									<td class="cell100 column2">Boxing</td>
@@ -242,12 +258,38 @@
 			</div>
 		</div>
 	</div>
+
+
+	<!--===============================================================================================-->
+	<script src="~/Table_Fixed_Header/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="~/Table_Fixed_Header/vendor/bootstrap/js/popper.js"></script>
+	<script src="~/Table_Fixed_Header/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="~/Table_Fixed_Header/vendor/select2/select2.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="~/Table_Fixed_Header/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	<script>
+		$('.js-pscroll').each(function () {
+			var ps = new PerfectScrollbar(this);
+
+			$(window).on('resize', function () {
+				ps.update();
+			})
+		});
+	</script>
+	<!--===============================================================================================-->
+	<script src="~/Table_Fixed_Header/js/main.js"></script>
 </body>
 
 
 
 
 @section Scripts{
+
+
+
+
 
 
 
