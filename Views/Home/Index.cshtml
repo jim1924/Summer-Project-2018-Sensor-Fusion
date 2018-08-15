@@ -26,6 +26,9 @@
 
 
 
+
+
+
 <body>
 
 
@@ -37,7 +40,7 @@
 					<div class="col-md-12">
 						<div class="form-section">
 							<div class="row">
-								<form role="form">
+								<form role="form" asp-controller="home" asp-action="Index" method="post">
 									<div class="col-md-3">
 										<div class="form-group">
 											<div class="serchtile">Hospital</div>
@@ -55,8 +58,8 @@
 									<div class="col-md-2">
 										<div class="form-group">
 											<div class="serchtile">Operation From</div>
-											<div class='input-group date' id='fromDate'>
-												<input type='date' name="fromDate" class="form-control" />
+											<div class='input-group date'>
+												@Html.TextBoxFor(model => model.searchFields.fromDate, new { type = "date", @class = "form-control" })
 												<span class="input-group-addon">
 													<span class="glyphicon glyphicon-calendar"></span>
 												</span>
@@ -64,10 +67,10 @@
 										</div>
 									</div>
 									<div class="col-md-2">
-										<div class="form-group">
+										<div class="form-group input-group-sm">
 											<div class="serchtile">Operation To</div>
-											<div class='input-group date' id='ToDate'>
-												<input type='date' name="toDate" class="form-control" />
+											<div class='input-group date'>
+												@Html.TextBoxFor(model => model.searchFields.toDate,  new { type = "date", @class = "form-control" })
 												<span class="input-group-addon">
 													<span class="glyphicon glyphicon-calendar"></span>
 												</span>
@@ -94,7 +97,7 @@
 
 									<div class="col-md-2">
 										<br>
-										<button type="submit" class="btn btn-default btn-primary">Search</button>
+										<button type="submit" id="submit" class="btn btn-default btn-primary">Search</button>
 
 									</div>
 								</form>
@@ -135,11 +138,11 @@
 						<table>
 							<thead>
 								<tr class="row100 head">
-									<th class="cell100 column1">Hospital</th>
+									<th class="cell100 column4">Hospital</th>
 									<th class="cell100 column2">OR number</th>
-									<th class="cell100 column3">Date</th>
-									<th class="cell100 column4">Patient</th>
-									<th class="cell100 column5">Spots</th>
+									<th class="cell100 column3">Patient</th>
+									<th class="cell100 column5">Date</th>
+									<th class="cell100 column1 ">Staff</th>
 								</tr>
 							</thead>
 						</table>
@@ -151,105 +154,14 @@
 
 								@foreach (var operation in Model.ViewOperations)
 								{
-									<tr class="row100 body">
-										<td class="cell100 column3">@operation.hospitalName</td>
+									<tr class="row100 body" onclick="testFunction(@operation.operationID)">
+										<td class="cell100 column4">@operation.hospitalName</td>
 										<td class="cell100 column2">@operation.roomNO</td>
-										<td class="cell100 column3">@operation.patient.firstName   @operation.patient.lastName</td>
+										<td class="cell100 column3">@operation.patient.firstName @operation.patient.lastName</td>
+										<td class="cell100 column5">@operation.date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+										<td class="cell100 column1">@operation.staff</td>
 									</tr>
 								}
-
-
-
-
-
-
-
-								<tr class="row100 body">
-									<td class="cell100 column1">Like a butterfly</td>
-									<td class="cell100 column2">Boxing</td>
-									<td class="cell100 column3">9:00 AM - 11:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-
-								<tr class="row100 body">
-									<td class="cell100 column1">Mind & Body</td>
-									<td class="cell100 column2">Yoga</td>
-									<td class="cell100 column3">8:00 AM - 9:00 AM</td>
-									<td class="cell100 column4">Adam Stewart</td>
-									<td class="cell100 column5">15</td>
-								</tr>
-
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
-								<tr class="row100 body">
-									<td class="cell100 column1">Crit Cardio</td>
-									<td class="cell100 column2">Gym</td>
-									<td class="cell100 column3">9:00 AM - 10:00 AM</td>
-									<td class="cell100 column4">Aaron Chapman</td>
-									<td class="cell100 column5">10</td>
-								</tr>
 
 							</tbody>
 						</table>
@@ -286,10 +198,32 @@
 
 
 @section Scripts{
+<script>
+			$('#submit').on('click', function () {
+				var fuck = new Date($('#fromDate').val());
+				alert("date is " + date.getDate().toString());
+				alert("year is " + date.getFullYear().toString());
+				alert("month is" + date.getMonth().toString());
+				@Model.searchFields.fromDate =new DateTime(fuck.getFullYear, fuck.getMonth, fuck.getDate);
+
+			});
+
+</script>
 
 
 
 
+
+	<script>
+		function testFunction(id) {
+
+			window.location.href = "/home/LoadOperation";
+
+		}
+
+
+
+	</script>
 
 
 

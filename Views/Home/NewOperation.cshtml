@@ -110,7 +110,7 @@
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-upload"></i></span>
 
-						<input id="monitor" type="file" name="monitor" multiple />
+						<input id="monitorFiles" type="file" name="monitorFiles" multiple />
 					</div>
 				</div>
 			</div>
@@ -144,7 +144,27 @@
 			$("#PatientDropDown").chosen();
 			$("#TypeDropDown").chosen();
 		});
+
+
+		//$('input#videoFiles').change(function () {
+		//	var files = $(this)[0].files;
+		//	if (files.length >=0) {
+		//		alert("you can select max 10 files.");
+		//	} else {
+		//		alert("correct, you have selected less than 10 files");
+		//	}
+		//});
+
+
+
+
+
+
+
 		function validateForm() {
+
+
+			
 			var e = document.getElementById("HospitalDropDown");
 			var selected = e.options[e.selectedIndex].text;
 			if (selected =="Select a hospital...") {
@@ -171,6 +191,22 @@
 				alert("Please select the type of the operation");
 				return false;
 			}
+
+			var videoFiles = $('input#videoFiles')[0].files;
+			var audioFiles = $('input#audioFiles')[0].files;
+			var monitorFiles = $('input#monitorFiles')[0].files;
+
+			if (videoFiles.length == 0 && audioFiles.length == 0 && monitorFiles.length == 0) {
+				alert("You have to select at least one video file,audio file, or patient's monitoring file");
+				return false;
+			} else if (videoFiles.length > 3 && audioFiles.length > 3 && monitorFiles.length > 1) {
+				alert("You can only upload at maximum 3 video files and 3 audio files and 1 patient monitoring file");
+				return false;
+			}
+
+
+
+
 			return true;
 		}
 

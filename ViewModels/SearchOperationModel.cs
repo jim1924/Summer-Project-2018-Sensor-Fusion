@@ -9,6 +9,7 @@ namespace SensorFusion.ViewModels
     {
 		public NewOperationFormModel searchFields { get; set; }
 
+
 		public IEnumerable<SingleOperationViewModel> ViewOperations { get; set; }
 
 

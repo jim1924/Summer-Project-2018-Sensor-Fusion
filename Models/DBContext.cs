@@ -128,7 +128,6 @@ namespace SensorFusion.Models
 						operation.patient.patientID=reader.GetInt64("patientID");
 						operation.roomNO = reader.GetString("roomNO");
 
-						operation.staff = new List<Staff>();
 						operation.staff = GetStaffForOperationID(operation.operationID);
 						list.Add(operation);
 					}
@@ -138,17 +137,45 @@ namespace SensorFusion.Models
 			return list;
 		}
 
-
-		public List<Staff> GetStaffForOperationID(long id)
+		public IEnumerable<SingleOperationViewModel> GetFilteredOperations(Operation filters)
 		{
 			List<SingleOperationViewModel> list = new List<SingleOperationViewModel>();
-
 
 			using (MySqlConnection conn = GetConnection())
 			{
 				conn.Open();
-				MySqlCommand cmd = new MySqlCommand(
-				"select twentyoperations.operationID,hospital.name AS 'HoD ", conn);
+				MySqlCommand cmd = conn.CreateCommand();
+				string staffQuery = "";
+				if (filters.staffIDs != null)
+				{
+					string staffNumbers = filters.staffIDs[0].ToString();
+					for (int i = 1; i < filters.staffIDs.Count(); i++)
+					{
+						staffNumbers = staffNumbers + "," + filters.staffIDs[i].ToString();
+					}
+					staffNumbers = "(" + staffNumbers + ")";
+					staffQuery = "AND operation.operationID in ( select operations_staff.operationID FROM operations_staff WHERE operations_staff.staffID in " + staffNumbers + " group by operations_staff.operationID  having count(operation.operationID)=" + filters.staffIDs.Count().ToString()+")";
+				}
+
+
+				cmd.CommandText =
+				"select operation.operationID,hospital.name AS 'Hospital Name',hospital_operating_room.roomNO,operation.dateStamp,patient.firstName AS 'Patients first name',patient.lastName AS 'Patients last name',patient.patientID" +
+				" from operation inner join hospital ON operation.hospitalID = hospital.hospitalID" +
+				" inner join hospital_operating_room ON operation.roomNO = hospital_operating_room.roomNO" +
+				" inner join patient ON operation.patientID = patient.patientID" +
+				" where (operation.hospitalID=?hospitalID OR ?hospitalID=0) AND (operation.roomNO=?roomNO OR ?roomNO IS NULL) AND (operation.dateStamp>?fromDate OR ?fromDate IS NULL)" +
+				" AND (operation.dateStamp<?toDate OR ?toDate IS NULL) AND (operation.patientID=?patientID OR ?patientID=0) "+ staffQuery;
+
+				cmd.Parameters.AddWithValue("?hospitalID", (filters.hospitalID != 0) ? filters.hospitalID : 0);
+				cmd.Parameters.AddWithValue("?roomNO", (filters.roomNO != null) ? filters.roomNO : null);
+				cmd.Parameters.AddWithValue("?fromDate", (filters.fromDate != new DateTime()) ? filters.fromDate.ToString("yyyy-MM-dd HH:mm:ss") : null);
+				cmd.Parameters.AddWithValue("?toDate", (filters.toDate != new DateTime()) ? filters.toDate.ToString("yyyy-MM-dd HH:mm:ss") : null);
+				cmd.Parameters.AddWithValue("?patientID", (filters.patientID != 0) ? filters.patientID : 0);
+
+
+
+
+
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
@@ -162,15 +189,50 @@ namespace SensorFusion.Models
 						operation.patient.lastName = reader.GetString("Patients last name");
 						operation.patient.patientID = reader.GetInt64("patientID");
 						operation.roomNO = reader.GetString("roomNO");
-
-						operation.staff = new List<Staff>();
 						operation.staff = GetStaffForOperationID(operation.operationID);
 						list.Add(operation);
+
+
 					}
 				}
 			}
 
 			return list;
+
+		}
+
+
+
+
+
+		public string GetStaffForOperationID(long id)
+		{
+			List<Staff> list = new List<Staff>();
+
+
+			using (MySqlConnection conn = GetConnection())
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(
+				"select * from operations_staff inner join staff on operations_staff.staffID=staff.staffID WHERE operations_staff.operationID='" + id +"'", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Staff objectstaff = new Staff();
+						objectstaff.staffID = reader.GetInt32("staffID");
+						objectstaff.firstName = reader.GetString("firstName");
+						objectstaff.lastName = reader.GetString("lastName");
+						list.Add(objectstaff);
+					}
+				}
+			}
+			string staff= list[0].firstName + " " + list[0].lastName;
+			for (int i = 1; i < list.Count; i++)
+			{
+				staff = staff + ", " + list[i].firstName+" "+ list[i].lastName;
+			}
+			return staff;
 
 		}
 
@@ -210,6 +272,8 @@ namespace SensorFusion.Models
 
 
 		}
+
+
 
 		public IEnumerable<Patient> GetAllPatients()
 		{

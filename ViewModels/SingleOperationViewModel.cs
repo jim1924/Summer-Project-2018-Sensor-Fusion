@@ -13,7 +13,7 @@ namespace SensorFusion.ViewModels
 		public string roomNO { get; set; }
 		public DateTime date { get; set; }
 		public Patient patient { get; set; }
-		public List<Staff> staff { get; set; }
+		public string staff { get; set; }
 
 
 

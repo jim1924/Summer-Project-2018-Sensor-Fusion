@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SensorFusion.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,6 +35,12 @@ namespace SensorFusion.ViewModels
 		public List<Audio> audios { get; set; }
 		public double maxDuration { get; set; }
 		public DateTime date { get; set; }
+
+
+
+		//for searching
+		public DateTime fromDate { get; set; }
+		public DateTime toDate { get; set; }
 
 	}
 }

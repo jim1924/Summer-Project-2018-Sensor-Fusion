@@ -16,5 +16,11 @@ namespace SensorFusion.Models
 		public int operationTypeID { get; set; }
 
 
+		//for filtering
+		public DateTime fromDate { get; set; }
+		public DateTime toDate { get; set; }
+		public int[] staffIDs { get; set; }
+
+
 	}
 }
