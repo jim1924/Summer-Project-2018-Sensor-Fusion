@@ -33,3 +33,4 @@ C:\Users\Dimitris Selal\source\repos\SensorFusion\SensorFusion\obj\Debug\netcore
 C:\Users\Dimitris Selal\source\repos\SensorFusion\SensorFusion\obj\Debug\netcoreapp2.1\Razor\Views\Blobs\ListBlobs.g.cshtml.cs
 C:\Users\Dimitris Selal\source\repos\SensorFusion\SensorFusion\obj\Debug\netcoreapp2.1\Razor\Views\Home\NewOperation.g.cshtml.cs
 C:\Users\Dimitris Selal\source\repos\SensorFusion\SensorFusion\obj\Debug\netcoreapp2.1\Razor\dont.g.cshtml.cs
+C:\Users\Dimitris Selal\source\repos\SensorFusion\SensorFusion\obj\Debug\netcoreapp2.1\Razor\Views\Home\Details.g.cshtml.cs

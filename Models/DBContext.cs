@@ -25,7 +25,6 @@ namespace SensorFusion.Models
 
 		{
 			List<Hospital> list = new List<Hospital>();
-			//SelectedHospitals selected = new SelectedHospitals();
 
 
 			using (MySqlConnection conn = GetConnection())
@@ -201,9 +200,47 @@ namespace SensorFusion.Models
 
 		}
 
+		public SingleOperationViewModel GetFullDetailsOfOperation(long id)
+		{
+			SingleOperationViewModel operation = new SingleOperationViewModel();
+			using (MySqlConnection conn = GetConnection())
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(
+				"select operation.operationID, hospital.name AS 'Hospital Name', hospital_operating_room.roomNO, operation.dateStamp, patient.firstName AS 'Patients first name', patient.lastName AS 'Patients last name', patient.patientID, type_of_operation.description" +
+				" from operation inner join hospital ON operation.hospitalID = hospital.hospitalID" +
+				" inner join hospital_operating_room ON operation.roomNO = hospital_operating_room.roomNO" +
+				" inner join patient ON operation.patientID = patient.patientID" +
+				" inner join type_of_operation ON operation.operationTypeID = type_of_operation.operationTypeID" +
+				" where operation.operationID='" +id+"'", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						operation.audioFiles = GetAudiosForOperationID(id);
+						operation.staff = GetStaffForOperationID(id);
+						operation.videoFiles = GetVideosForOperationID(id);
+						operation.date = (DateTime)reader.GetMySqlDateTime("dateStamp");
+						operation.hospitalName = reader.GetString("Hospital Name");
+						operation.operationID = reader.GetInt64("operationID");
+						operation.patient = new Patient();
+						operation.patient.firstName = reader.GetString("Patients first name");
+						operation.patient.lastName = reader.GetString("Patients last name");
+						operation.patient.patientID = reader.GetInt64("patientID");
+						operation.roomNO = reader.GetString("roomNO");
+						operation.type = reader.GetString("description");
+
+					}
+				}
+			}
+
+			return operation;
 
 
 
+
+
+		}
 
 		public string GetStaffForOperationID(long id)
 		{
@@ -233,6 +270,58 @@ namespace SensorFusion.Models
 				staff = staff + ", " + list[i].firstName+" "+ list[i].lastName;
 			}
 			return staff;
+
+		}
+		public List<Video> GetVideosForOperationID(long id)
+		{
+			List<Video> list = new List<Video>();
+
+
+			using (MySqlConnection conn = GetConnection())
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(
+				"select * from video WHERE video.operationID='" + id + "'", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Video video = new Video();
+						video.fullPath = reader.GetString("fullPath");
+						video.size_bytes = reader.GetInt64("size_bytes");
+						video.fileName = reader.GetString("fileName");
+						list.Add(video);
+					}
+				}
+			}
+
+			return list;
+
+		}
+		public List<Audio> GetAudiosForOperationID(long id)
+		{
+			List<Audio> list = new List<Audio>();
+
+
+			using (MySqlConnection conn = GetConnection())
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(
+				"select * from audio WHERE audio.operationID='" + id + "'", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						Audio audio = new Audio();
+						audio.fullPath = reader.GetString("fullPath");
+						audio.size_bytes = reader.GetInt64("size_bytes");
+						audio.fileName = reader.GetString("fileName");
+						list.Add(audio);
+					}
+				}
+			}
+
+			return list;
 
 		}
 
@@ -268,8 +357,6 @@ namespace SensorFusion.Models
 			}
 
 			return list;
-
-
 
 		}
 
@@ -362,7 +449,7 @@ namespace SensorFusion.Models
 
 		}
 
-		internal void InsertOperation(NewOperationFormModel model)
+		public void InsertOperation(NewOperationFormModel model)
 		{
 			model.UploadedDate = new DateTime();
 			model.UploadedDate = DateTime.Now;
@@ -371,7 +458,7 @@ namespace SensorFusion.Models
 				conn.Open();
 				//insert the operation to the database
 				MySqlCommand cmd = conn.CreateCommand();
-				cmd.CommandText = "INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration,operationTypeID,uploadedDate) VALUES (?patientID,?hospitalID,?roomNo,?date,?maxDuration,?operationTypeID,?uploadedDate)";
+				cmd.CommandText = "INSERT INTO operation (patientID,hospitalID,roomNO,dateStamp,duration_ms,operationTypeID,uploadedDate) VALUES (?patientID,?hospitalID,?roomNo,?date,?maxDuration,?operationTypeID,?uploadedDate)";
 
 				cmd.Parameters.AddWithValue("?patientID", model.patientID);
 				cmd.Parameters.AddWithValue("?hospitalID", model.hospitalID);
@@ -397,16 +484,17 @@ namespace SensorFusion.Models
 				{
 					foreach (var video in model.videos)
 					{
-						cmd.CommandText = "INSERT INTO video (operationID,size_bytes,timeStamp,type,duration,fileName) VALUES (?operationID,?size_bytes,?timeStamp,?type,?duration,?fileName)";
+						cmd.CommandText = "INSERT INTO video (operationID,size_bytes,timeStamp,type,duration_ms,fileName,fullPath) VALUES (?operationID,?size_bytes,?timeStamp,?type,?duration,?fileName,?fullPath)";
 						cmd.Parameters.AddWithValue("?operationID", operationID);
 						cmd.Parameters.AddWithValue("?size_bytes", video.size_bytes);
 						cmd.Parameters.AddWithValue("?timeStamp", video.timeStamp);
 						cmd.Parameters.AddWithValue("?type", video.type);
 						cmd.Parameters.AddWithValue("?duration", video.duration);
 						cmd.Parameters.AddWithValue("?fileName", video.fileName);
+						cmd.Parameters.AddWithValue("?fullPath", video.fullPath);
+
 						cmd.ExecuteNonQuery();
 						cmd.Parameters.Clear();
-
 					}
 
 				}
@@ -415,13 +503,18 @@ namespace SensorFusion.Models
 					foreach (var audio in model.audios)
 					{
 						Console.WriteLine(audio.fileName);
-						cmd.CommandText = "INSERT INTO audio (operationID,size_bytes,timeStamp,type,duration,fileName) VALUES (?operationID,?size_bytes,?timeStamp,?type,?duration,?fileName)";
+						cmd.CommandText = "INSERT INTO audio (operationID,size_bytes,timeStamp,type,duration_ms,fileName,fullPath) VALUES (?operationID,?size_bytes,?timeStamp,?type,?duration,?fileName,?fullPath)";
 						cmd.Parameters.AddWithValue("?operationID", operationID);
 						cmd.Parameters.AddWithValue("?size_bytes", audio.size_bytes);
 						cmd.Parameters.AddWithValue("?timeStamp", audio.timeStamp);
 						cmd.Parameters.AddWithValue("?type", audio.type);
 						cmd.Parameters.AddWithValue("?duration", audio.duration);
 						cmd.Parameters.AddWithValue("?fileName", audio.fileName);
+						cmd.Parameters.AddWithValue("?fullPath", audio.fullPath);
+
+
+
+
 						cmd.ExecuteNonQuery();
 						cmd.Parameters.Clear();
 
@@ -436,11 +529,6 @@ namespace SensorFusion.Models
 					cmd.ExecuteNonQuery();
 					cmd.Parameters.Clear();
 				}
-
-
-
-
-
 			}
 
 

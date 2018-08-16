@@ -49,19 +49,10 @@ namespace SensorFusion.Controllers
 
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public IActionResult Index(SearchOperationModel model)
 		{
 
-
-			Console.WriteLine("The selected patient id is :" + model.searchFields.patientID);//default is 0
-			Console.WriteLine("The selected hospital id is: " + model.searchFields.hospitalID); //default is 0
-			if (model.searchFields.staffIDs == null)
-			{
-				Console.WriteLine("fucking null");
-			}
-			Console.WriteLine("The selected room id is: " + model.searchFields.roomNo); //default is error
-			Console.WriteLine("The selected from date is: " + model.searchFields.fromDate); //default is 01/01/0001 00:00:00
-			Console.WriteLine("The selected to date is: " + model.searchFields.toDate);
 
 			bool hospitalSelected = model.searchFields.hospitalID != 0;
 			bool roomSelected = !model.searchFields.roomNo.Equals("error");
@@ -122,11 +113,16 @@ namespace SensorFusion.Controllers
 			return RedirectToAction("Index");
 		}
 
-		[HttpPost]
-		public IActionResult LoadOperation(long operationID)
+		[HttpGet]
+		public IActionResult Details(long id)
 		{
-			Console.WriteLine("The ID is : "+operationID);
-			return RedirectToAction("home", "index");
+			SingleOperationViewModel model = _context.GetFullDetailsOfOperation(id);
+
+			if (model == null)
+			{
+				return RedirectToAction("Index");
+			}
+			return View(model);
 		}
 
 
@@ -151,13 +147,10 @@ namespace SensorFusion.Controllers
 
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> NewOperation(NewOperationFormModel model )
 		{
 			BlobsController storage = new BlobsController(_hostingEnvironment);
-
-
-
-
 			var path = _hostingEnvironment.WebRootPath;
 			long nextID =_context.GetNextOperationID();
 			string containerName = "operation" + nextID;
@@ -185,7 +178,7 @@ namespace SensorFusion.Controllers
 						{
 							await VideoFile.CopyToAsync(fileStream);
 						}
-
+						string fullVideoPath = storage.GetBlobFullPath(containerName, videoName);
 
 						model.videos.Add(new Video() {
 							OperationID = nextID,
@@ -193,7 +186,9 @@ namespace SensorFusion.Controllers
 							timeStamp = mediaUtil.GetVideoEncodedDate(),
 							type = type[1],
 							duration = mediaUtil.GetVideoDuration().TotalMilliseconds,
-							fileName = videoName
+							fileName = videoName,
+							fullPath = fullVideoPath
+
 						});
 						mediaUtil.PrintVideoAvailableProperties();
 						Console.WriteLine("The size of the video in bytes is: "+ mediaUtil.GetVideoSize());
@@ -245,6 +240,7 @@ namespace SensorFusion.Controllers
 						}
 
 
+						string fullAudioPath = storage.GetBlobFullPath(containerName, audioName);
 
 						model.audios.Add(new Audio()
 						{
@@ -253,7 +249,8 @@ namespace SensorFusion.Controllers
 							timeStamp = mediaUtil.GetAudioEarlierDate(audioFile.FileName),
 							type = type[1],
 							duration = mediaUtil.GetAudioDuration().TotalMilliseconds,
-							fileName = audioName
+							fileName = audioName,
+							fullPath=fullAudioPath
 						});
 						mediaUtil.PrintAudioAvailableProperties();
 						Console.WriteLine("The size of the audio file in bytes is:" + mediaUtil.GetAudioSize());
@@ -287,6 +284,7 @@ namespace SensorFusion.Controllers
 			_context.InsertOperation(model);
 
 			TempData["msg"] = "<script>alert('Operation has been added successfully');</script>";
+
 			return RedirectToAction(nameof(Index));
 
 		}
@@ -299,8 +297,8 @@ namespace SensorFusion.Controllers
         {
             ViewData["Message"] = "Your contact page.";
 
-            return View();
-        }
+			return RedirectToAction("Details", new { id = 2 });
+		}
 
         public IActionResult Privacy()
         {

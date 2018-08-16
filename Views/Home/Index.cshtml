@@ -70,7 +70,7 @@
 										<div class="form-group input-group-sm">
 											<div class="serchtile">Operation To</div>
 											<div class='input-group date'>
-												@Html.TextBoxFor(model => model.searchFields.toDate,  new { type = "date", @class = "form-control" })
+												@Html.TextBoxFor(model => model.searchFields.toDate, new { type = "date", @class = "form-control" })
 												<span class="input-group-addon">
 													<span class="glyphicon glyphicon-calendar"></span>
 												</span>
@@ -108,6 +108,9 @@
 			</div>
 		</div>
 	</div>
+
+
+
 
 
 
@@ -216,8 +219,7 @@
 
 	<script>
 		function testFunction(id) {
-
-			window.location.href = "/home/LoadOperation";
+			window.location.href = "/home/details/"+id;
 
 		}
 
@@ -260,12 +262,6 @@
 			});
 		}
 	</script>
-
-
-
-
-
-
 
 
 

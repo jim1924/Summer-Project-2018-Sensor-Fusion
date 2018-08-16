@@ -128,8 +128,8 @@
 </div>
 
 
-@Html.Raw(TempData["msg"])
 
+@Html.Raw(TempData["msg"])
 
 
 @section Scripts{
@@ -164,7 +164,7 @@
 		function validateForm() {
 
 
-			
+
 			var e = document.getElementById("HospitalDropDown");
 			var selected = e.options[e.selectedIndex].text;
 			if (selected =="Select a hospital...") {

@@ -113,6 +113,15 @@ namespace SensorFusion.Controllers
 
 		}
 
+		public string GetBlobFullPath(string containerName, string blobName)
+		{
+			CloudBlobContainer container = GetCloudBlobContainer(containerName);
+			CloudBlockBlob blob = container.GetBlockBlobReference(blobName);
+			return blob.StorageUri.PrimaryUri.ToString();
+
+		}
+
+
 		public string DownloadBlob(string containerName,string blobName,string downloadPath)
 		{
 

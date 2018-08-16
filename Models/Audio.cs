@@ -13,6 +13,7 @@ namespace SensorFusion.Models
 		public string type { get; set; }
 		public double duration { get; set; }
 		public string fileName { get; set; }
+		public string fullPath { get; set; }
 
 	}
 }

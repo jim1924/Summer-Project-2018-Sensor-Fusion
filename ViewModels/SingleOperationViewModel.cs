@@ -17,5 +17,12 @@ namespace SensorFusion.ViewModels
 
 
 
+
+		//for details
+		public List<Video> videoFiles { get; set; }
+		public List<Audio> audioFiles { get; set; }
+		public string type { get; set; }
+
+
 	}
 }
