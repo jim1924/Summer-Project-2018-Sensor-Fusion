@@ -201,7 +201,7 @@
 
 
 @section Scripts{
-<script>
+	<script>
 			$('#submit').on('click', function () {
 				var fuck = new Date($('#fromDate').val());
 				alert("date is " + date.getDate().toString());
@@ -211,7 +211,7 @@
 
 			});
 
-</script>
+	</script>
 
 
 
@@ -219,7 +219,7 @@
 
 	<script>
 		function testFunction(id) {
-			window.location.href = "/home/details/"+id;
+			window.location.href = "/home/details/" + id;
 
 		}
 
@@ -262,6 +262,25 @@
 			});
 		}
 	</script>
+
+
+
+
+
+
+	<script type="text/javascript">
+     @Model.JavascriptToRun
+
+     function ShowErrorPopup() {
+          alert('Sorry, we could not process your order.');
+     }
+
+	</script>
+
+
+
+
+
 
 
 

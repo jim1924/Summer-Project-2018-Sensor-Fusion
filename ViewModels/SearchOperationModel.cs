@@ -12,6 +12,8 @@ namespace SensorFusion.ViewModels
 
 		public IEnumerable<SingleOperationViewModel> ViewOperations { get; set; }
 
+		public string JavascriptToRun { get; set; }
+
 
 	}
 }

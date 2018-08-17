@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SensorFusion.Models;
 using SensorFusion.ViewModels;
@@ -42,6 +43,9 @@ namespace SensorFusion.Controllers
 			newOperationModel.rooms = defaultSelection;
 			searchOperationModel.ViewOperations = _context.Get20MostRecentOperations();
 			searchOperationModel.searchFields = newOperationModel;
+
+
+
 
 			return View(searchOperationModel);
 		}
@@ -103,7 +107,11 @@ namespace SensorFusion.Controllers
 				searchOperationModel.ViewOperations = _context.Get20MostRecentOperations();
 
 				searchOperationModel.ViewOperations = _context.GetFilteredOperations(filters);
+				Console.WriteLine("fuck I just want javascript");
+				searchOperationModel.JavascriptToRun = "ShowErrorPopup()";
+
 				return View(searchOperationModel);
+
 
 			}
 
@@ -283,7 +291,6 @@ namespace SensorFusion.Controllers
 
 			_context.InsertOperation(model);
 
-			TempData["msg"] = "<script>alert('Operation has been added successfully');</script>";
 
 			return RedirectToAction(nameof(Index));
 

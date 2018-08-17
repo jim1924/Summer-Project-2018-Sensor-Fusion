@@ -207,7 +207,7 @@ namespace SensorFusion.Models
 			{
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand(
-				"select operation.operationID, hospital.name AS 'Hospital Name', hospital_operating_room.roomNO, operation.dateStamp, patient.firstName AS 'Patients first name', patient.lastName AS 'Patients last name', patient.patientID, type_of_operation.description" +
+				"select operation.operationID, operation.duration_ms, hospital.name AS 'Hospital Name', hospital_operating_room.roomNO, operation.dateStamp, patient.firstName AS 'Patients first name', patient.lastName AS 'Patients last name', patient.patientID, type_of_operation.description" +
 				" from operation inner join hospital ON operation.hospitalID = hospital.hospitalID" +
 				" inner join hospital_operating_room ON operation.roomNO = hospital_operating_room.roomNO" +
 				" inner join patient ON operation.patientID = patient.patientID" +
@@ -229,6 +229,7 @@ namespace SensorFusion.Models
 						operation.patient.patientID = reader.GetInt64("patientID");
 						operation.roomNO = reader.GetString("roomNO");
 						operation.type = reader.GetString("description");
+						operation.duration = (double)reader.GetInt64("duration_ms") / 1000 / 60;
 
 					}
 				}
@@ -290,6 +291,9 @@ namespace SensorFusion.Models
 						video.fullPath = reader.GetString("fullPath");
 						video.size_bytes = reader.GetInt64("size_bytes");
 						video.fileName = reader.GetString("fileName");
+						video.duration = reader.GetInt64("duration_ms");
+						video.timeStamp = (DateTime)reader.GetMySqlDateTime("timeStamp");
+						video.type = reader.GetString("type");
 						list.Add(video);
 					}
 				}
@@ -316,6 +320,9 @@ namespace SensorFusion.Models
 						audio.fullPath = reader.GetString("fullPath");
 						audio.size_bytes = reader.GetInt64("size_bytes");
 						audio.fileName = reader.GetString("fileName");
+						audio.duration = reader.GetInt64("duration_ms");
+						audio.timeStamp = (DateTime)reader.GetMySqlDateTime("timeStamp");
+						audio.type = reader.GetString("type");
 						list.Add(audio);
 					}
 				}
