@@ -132,100 +132,147 @@
 
 
 @section Scripts{
-	<script>
-		$(function () {
 
-			$("#StaffDropDown").chosen(
-				{
-					width: "100%"
-				});
-			$("#HospitalDropDown").chosen();
-			$("#PatientDropDown").chosen();
-			$("#TypeDropDown").chosen();
+	
+
+
+
+
+<script>
+	$(function ()
+	{
+
+		$("#StaffDropDown").chosen(
+			{
+				width: "100%"
+			});
+		$("#HospitalDropDown").chosen();
+		$("#PatientDropDown").chosen();
+		$("#TypeDropDown").chosen();
+	});
+
+	function validateForm()
+	{
+
+
+
+
+		var e = document.getElementById("HospitalDropDown");
+		var selected = e.options[e.selectedIndex].text;
+		if (selected =="Select a hospital...") {
+		alert("Please select a hospital");
+		return false;
+		}
+
+		var e = document.getElementById("RoomDropDown");
+		var selected = e.options[e.selectedIndex].value;
+		if (selected=="error") {
+		alert("Please select an operating room");
+		return false;
+		}
+
+		var e = document.getElementById("PatientDropDown");
+		var selected = e.options[e.selectedIndex].text;
+		if (selected == "Select a patient...") {
+		alert("Please select a patient");
+		return false;
+		}
+		var e = document.getElementById("StaffDropDown");
+		if (typeof e == "undefined" || e.value == '') {
+			alert("Please select the staff that participated in the operation");
+			return false;
+		}
+		var e = document.getElementById("TypeDropDown");
+		var selected = e.options[e.selectedIndex].text;
+		if (selected == "Select the operation type...") {
+		alert("Please select the type of the operation");
+		return false;
+		}
+
+		var videoFiles = $('input#videoFiles')[0].files;
+		var audioFiles = $('input#audioFiles')[0].files;
+		var monitorFiles = $('input#monitorFiles')[0].files;
+
+		if (videoFiles.length == 0 && audioFiles.length == 0 && monitorFiles.length == 0) {
+		alert("You have to select at least one video file,audio file, or patient's monitoring file");
+		return false;
+		} else if (videoFiles.length > 3 && audioFiles.length > 3 && monitorFiles.length > 1) {
+		alert("You can only upload at maximum 3 video files and 3 audio files and 1 patient monitoring file");
+		return false;
+		}
+
+		for (var i = 0; i < videoFiles.length; i++) {
+			if (!isVideo(videoFiles[i].type)) {
+				alert("You have selected at least one unsupported video file");
+				return false;
+			}
+		}
+		for (var i = 0; i < audioFiles.length; i++) {
+			if (!isAudio(audioFiles[i].type)) {
+				alert("You have selected at least one unsupported audio file");
+				return false;
+			}
+		}
+
+		return true;
+
+	}
+
+
+
+
+	function isVideo(type)
+	{
+		var parts = type.split('/');
+		if (parts[0]=='video') {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	function isAudio(type)
+	{
+		var parts = type.split('/');
+		if (parts[0] == 'audio') {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+
+
+
+
+
+	function UpdateRooms(val)
+	{
+		var hospitalID = document.getElementById('HospitalDropDown').value;
+		$.ajax({
+		type: 'GET',
+		dataType: "JSON",
+		data: { hospitalID },
+		url: '@Url.Action("UpdateRooms", "Dynamic")',
+		success: function (result) {
+		var dropdown = $('#RoomDropDown');
+		dropdown.empty();
+		dropdown.append($('<option></option>').val("error").html("Please select a room..."));
+		$.each(result, function (i, room) {
+		dropdown.append($('<option></option>').val(room.roomNO).html(room.roomNO));
 		});
 
-
-
-
-
-
-
-
-
-		function validateForm() {
-
-
-
-			var e = document.getElementById("HospitalDropDown");
-			var selected = e.options[e.selectedIndex].text;
-			if (selected =="Select a hospital...") {
-				alert("Please select a hospital");
-				return false;
-			}
-
-			var e = document.getElementById("RoomDropDown");
-			var selected = e.options[e.selectedIndex].value;
-			if (selected=="error") {
-				alert("Please select an operating room");
-				return false;
-			}
-
-			var e = document.getElementById("PatientDropDown");
-			var selected = e.options[e.selectedIndex].text;
-			if (selected == "Select a patient...") {
-				alert("Please select a patient");
-				return false;
-			}
-			var e = document.getElementById("TypeDropDown");
-			var selected = e.options[e.selectedIndex].text;
-			if (selected == "Select the operation type...") {
-				alert("Please select the type of the operation");
-				return false;
-			}
-
-			var videoFiles = $('input#videoFiles')[0].files;
-			var audioFiles = $('input#audioFiles')[0].files;
-			var monitorFiles = $('input#monitorFiles')[0].files;
-
-			if (videoFiles.length == 0 && audioFiles.length == 0 && monitorFiles.length == 0) {
-				alert("You have to select at least one video file,audio file, or patient's monitoring file");
-				return false;
-			} else if (videoFiles.length > 3 && audioFiles.length > 3 && monitorFiles.length > 1) {
-				alert("You can only upload at maximum 3 video files and 3 audio files and 1 patient monitoring file");
-				return false;
-			}
-
-
-
-
-			return true;
 		}
+		});
 
-		function UpdateRooms(val) {
-			var hospitalID = document.getElementById('HospitalDropDown').value;
-			$.ajax({
-				type: 'GET',
-				dataType: "JSON",
-				data: { hospitalID },
-				url: '@Url.Action("UpdateRooms", "Dynamic")',
-				success: function (result) {
-					var dropdown = $('#RoomDropDown');
-					dropdown.empty();
-					dropdown.append($('<option></option>').val("error").html("Please select a room..."));
-					$.each(result, function (i, room) {
-						dropdown.append($('<option></option>').val(room.roomNO).html(room.roomNO));
-					});
-
-				}
-			});
-
-
-		}
+	}
+</script>
 
 
 
 
-	</script>
+
 
 
 }

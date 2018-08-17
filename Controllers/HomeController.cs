@@ -107,8 +107,8 @@ namespace SensorFusion.Controllers
 				searchOperationModel.ViewOperations = _context.Get20MostRecentOperations();
 
 				searchOperationModel.ViewOperations = _context.GetFilteredOperations(filters);
-				Console.WriteLine("fuck I just want javascript");
-				searchOperationModel.JavascriptToRun = "ShowErrorPopup()";
+
+				
 
 				return View(searchOperationModel);
 
@@ -291,6 +291,7 @@ namespace SensorFusion.Controllers
 
 			_context.InsertOperation(model);
 
+			TempData["msg"] = "<script>alert('Operation uploaded successfully');</script>";
 
 			return RedirectToAction(nameof(Index));
 

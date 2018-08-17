@@ -42,5 +42,10 @@ namespace SensorFusion.ViewModels
 		public DateTime fromDate { get; set; }
 		public DateTime toDate { get; set; }
 
+
+
+		public string JavascriptToRun { get; set; }
+
+
 	}
 }
