@@ -305,7 +305,7 @@ namespace SensorFusion.Controllers
         {
             ViewData["Message"] = "Your contact page.";
 
-			return RedirectToAction("Details", new { id = 2 });
+			return View();
 		}
 
         public IActionResult Privacy()
