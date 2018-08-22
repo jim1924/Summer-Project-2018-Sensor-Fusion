@@ -184,5 +184,49 @@
 			}
 		}
 
+		@{
+			if(Model.patientsMonitoringFile!=null)
+			{
+				<tr>
+					<td><b>Patient's monitoring file</b></td>
+					<td><a href=@Model.patientsMonitoringFile.fullPath> @Model.patientsMonitoringFile.fullPath </a></td>
+				</tr>
+				<tr>
+					<td>Size</td>
+					@{
+						if (Model.patientsMonitoringFile.size_bytes <= 1024)
+						{
+							<td>@Model.patientsMonitoringFile.size_bytes bytes</td>
+						}
+						else if (Model.patientsMonitoringFile.size_bytes < 1048576)
+						{
+							decimal size = Math.Round((decimal)Model.patientsMonitoringFile.size_bytes / 1024, 2);
+							<td>@size Kb</td>
+						}
+						else if (Model.patientsMonitoringFile.size_bytes < 1073741824)
+						{
+							decimal size = Math.Round((decimal)Model.patientsMonitoringFile.size_bytes / 1024 / 1024, 2);
+							<td>@size Mb</td>
+						}
+						else if (Model.patientsMonitoringFile.size_bytes < 1099511627776)
+						{
+							decimal size = Math.Round((decimal)Model.patientsMonitoringFile.size_bytes / 1024 / 1024 / 1024, 2);
+							<td>@size Gb</td>
+						}
+					}
+				</tr>
+				<tr>
+					<td>Encoded Date</td>
+					<td>@Model.patientsMonitoringFile.timeStamp </td>
+				</tr>
+				<tr>
+					<td>Type</td>
+					<td>@Model.patientsMonitoringFile.type </td>
+				</tr>
+
+				counter = counter + 1;
+			}
+		}
+
 	</table>
 </div>

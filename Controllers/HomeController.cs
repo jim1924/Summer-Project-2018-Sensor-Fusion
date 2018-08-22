@@ -254,7 +254,7 @@ namespace SensorFusion.Controllers
 						{
 							OperationID = nextID,
 							size_bytes = audioFile.Length,
-							timeStamp = mediaUtil.GetAudioEarlierDate(audioFile.FileName),
+							timeStamp = mediaUtil.GetAudioEarliestDate(audioFile.FileName),
 							type = type[1],
 							duration = mediaUtil.GetAudioDuration().TotalMilliseconds,
 							fileName = audioName,
@@ -262,7 +262,7 @@ namespace SensorFusion.Controllers
 						});
 						mediaUtil.PrintAudioAvailableProperties();
 						Console.WriteLine("The size of the audio file in bytes is:" + mediaUtil.GetAudioSize());
-						Console.WriteLine("The earliert date of the specific file is: " +mediaUtil.GetAudioEarlierDate(audioFile.FileName));
+						Console.WriteLine("The earliert date of the specific file is: " +mediaUtil.GetAudioEarliestDate(audioFile.FileName));
 						Console.WriteLine("the type0 of the audio file is " + type[0]);
 						Console.WriteLine("the type1 of the audio file is " + type[1]);
 						Console.WriteLine("the duration of the audio file in seconds is " + mediaUtil.GetAudioDuration().TotalSeconds);
@@ -276,13 +276,49 @@ namespace SensorFusion.Controllers
 						{
 							model.maxDuration = mediaUtil.GetAudioDuration().TotalMilliseconds;
 						}
-						if (model.date.CompareTo(mediaUtil.GetAudioEarlierDate(audioFile.FileName)) > 0)
+						if (model.date.CompareTo(mediaUtil.GetAudioEarliestDate(audioFile.FileName)) > 0)
 						{
-							model.date = mediaUtil.GetAudioEarlierDate(audioFile.FileName);
+							model.date = mediaUtil.GetAudioEarliestDate(audioFile.FileName);
 						}
 						i++;
 					}
 				}
+			}
+
+			if (model.monitorFile!=null)
+			{
+				if (model.monitorFile.Length > 0)
+				{
+					model.patientsMonitoringFile = new PatientsMonitoringFile();
+					string[] name = model.monitorFile.FileName.Split('.');
+					Console.WriteLine("The fucking name is ");
+					name.ToList().ForEach(Console.WriteLine);
+					string suffix = name[name.Length - 1];
+					string type = model.monitorFile.ContentType.ToString();
+
+					string fileMonitorName = "patients-monitoring-file"+"."+suffix;
+					await storage.UploadBlob(containerName, fileMonitorName, model.monitorFile);
+					var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "TempFiles");
+					var filePath = Path.Combine(uploads, fileMonitorName);
+					MediaUtilities mediaUtil = new MediaUtilities(_hostingEnvironment, fileMonitorName);
+					using (var fileStream = new FileStream(filePath, FileMode.Create))
+					{
+						await model.monitorFile.CopyToAsync(fileStream);
+					}
+
+
+					string fullFilePath = storage.GetBlobFullPath(containerName, fileMonitorName);
+
+
+					model.patientsMonitoringFile.OperationID = nextID;
+					model.patientsMonitoringFile.size_bytes = model.monitorFile.Length;
+					model.patientsMonitoringFile.timeStamp = mediaUtil.GetFileEarliestDate(model.monitorFile.FileName);
+					model.patientsMonitoringFile.type = type;
+					model.patientsMonitoringFile.fileName = fileMonitorName;
+					model.patientsMonitoringFile.fullPath = fullFilePath;
+
+				}
+
 			}
 			Console.WriteLine("the earliest recorded date is:" + model.date);
 

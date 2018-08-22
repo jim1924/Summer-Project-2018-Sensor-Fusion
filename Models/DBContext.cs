@@ -220,6 +220,7 @@ namespace SensorFusion.Models
 						operation.audioFiles = GetAudiosForOperationID(id);
 						operation.staff = GetStaffForOperationID(id);
 						operation.videoFiles = GetVideosForOperationID(id);
+						operation.patientsMonitoringFile = GetMonitoringFileForOperationID(id);
 						operation.date = (DateTime)reader.GetMySqlDateTime("dateStamp");
 						operation.hospitalName = reader.GetString("Hospital Name");
 						operation.operationID = reader.GetInt64("operationID");
@@ -242,6 +243,8 @@ namespace SensorFusion.Models
 
 
 		}
+
+
 
 		public string GetStaffForOperationID(long id)
 		{
@@ -300,6 +303,32 @@ namespace SensorFusion.Models
 			}
 
 			return list;
+
+		}
+
+		public PatientsMonitoringFile GetMonitoringFileForOperationID(long id)
+		{
+
+			PatientsMonitoringFile patientsFile = new PatientsMonitoringFile();
+			using (MySqlConnection conn = GetConnection())
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(
+				"select * from monitor_system_file WHERE monitor_system_file.operationID='" + id + "'", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+
+						patientsFile.fullPath = reader.GetString("fullPath");
+						patientsFile.size_bytes = reader.GetInt64("size_bytes");
+						patientsFile.fileName = reader.GetString("fileName");
+						patientsFile.timeStamp = (DateTime)reader.GetMySqlDateTime("timeStamp");
+						patientsFile.type = reader.GetString("type");
+					}
+				}
+			}
+			return patientsFile;
 
 		}
 		public List<Audio> GetAudiosForOperationID(long id)
@@ -526,6 +555,18 @@ namespace SensorFusion.Models
 						cmd.Parameters.Clear();
 
 					}
+				}
+				if (model.patientsMonitoringFile != null)
+				{
+						cmd.CommandText = "INSERT INTO monitor_system_file (operationID,size_bytes,timeStamp,type,fileName,fullPath) VALUES (?operationID,?size_bytes,?timeStamp,?type,?fileName,?fullPath)";
+						cmd.Parameters.AddWithValue("?operationID", operationID);
+						cmd.Parameters.AddWithValue("?size_bytes", model.patientsMonitoringFile.size_bytes);
+						cmd.Parameters.AddWithValue("?timeStamp", model.patientsMonitoringFile.timeStamp);
+						cmd.Parameters.AddWithValue("?type", model.patientsMonitoringFile.type);
+						cmd.Parameters.AddWithValue("?fileName", model.patientsMonitoringFile.fileName);
+						cmd.Parameters.AddWithValue("?fullPath", model.patientsMonitoringFile.fullPath);
+						cmd.ExecuteNonQuery();
+						cmd.Parameters.Clear();
 				}
 
 				foreach (var id in model.staffIDs)

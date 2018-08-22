@@ -23,6 +23,7 @@ namespace SensorFusion.ViewModels
 		//from the user
 		public IList<IFormFile> videoFiles { get; set; }
 		public IList<IFormFile> audioFiles { get; set; }
+		public IFormFile monitorFile { get; set; }
 		public string roomNo { get; set; }
 		public long patientID { get; set; }
 		public int hospitalID { get; set; }
@@ -33,6 +34,7 @@ namespace SensorFusion.ViewModels
 		//for manipulating
 		public List<Video> videos { get; set; }
 		public List<Audio> audios { get; set; }
+		public PatientsMonitoringFile patientsMonitoringFile { get; set; }
 		public double maxDuration { get; set; }
 		public DateTime date { get; set; }
 

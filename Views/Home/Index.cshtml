@@ -34,8 +34,7 @@
 <body>
 
 
-
-	<div class="container">
+	<div class="limiter">
 		<div class="search">
 			<div class="container">
 				<div class="row">
@@ -109,7 +108,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
 
 
 
@@ -117,63 +115,94 @@
 
 
 
-	<style>
+		<style>
 
-		.search .form-section {
-			background: rgba(0,0,0,0.6);
-			border: 2px solid #414141;
-			border-radius: 5px;
-			padding: 10px;
-		}
+			.search .form-section {
+				background: rgba(0,0,0,0.6);
+				border: 2px solid #414141;
+				border-radius: 5px;
+				padding: 10px;
+			}
 
-		.serchtile {
-			color: #fff;
-		}
-	</style>
-
-
+			.serchtile {
+				color: #fff;
+			}
+		</style>
 
 
+		@{if (Model.ViewOperations.Count() != 0)
+			{
 
-	<div class="limiter">
-		<div class="container-table100">
-			<div class="wrap-table100">
-				<div class="table100 ver5 m-b-110">
-					<div class="table100-head">
-						<table>
-							<thead>
-								<tr class="row100 head">
-									<th class="cell100 column4">Hospital</th>
-									<th class="cell100 column2">OR number</th>
-									<th class="cell100 column3">Patient</th>
-									<th class="cell100 column5">Date</th>
-									<th class="cell100 column1 ">Staff</th>
-								</tr>
-							</thead>
-						</table>
+				<div class="container-table100">
+					<div class="wrap-table100">
+						<div class="table100 ver5 m-b-110">
+							<div class="table100-head">
+								<table>
+									<thead>
+										<tr class="row100 head">
+											<th class="cell100 column4">Hospital</th>
+											<th class="cell100 column2">OR number</th>
+											<th class="cell100 column3">Patient</th>
+											<th class="cell100 column5">Date</th>
+											<th class="cell100 column1 ">Staff</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+
+							<div class="table100-body js-pscroll">
+								<table>
+									<tbody>
+
+										@foreach (var operation in Model.ViewOperations)
+										{
+											<tr class="row100 body" onclick="testFunction(@operation.operationID)">
+												<td class="cell100 column4">@operation.hospitalName</td>
+												<td class="cell100 column2">@operation.roomNO</td>
+												<td class="cell100 column3">@operation.patient.firstName @operation.patient.lastName</td>
+												<td class="cell100 column5">@operation.date.ToString("yyyy-MM-dd HH:mm:ss")</td>
+												<td class="cell100 column1">@operation.staff</td>
+											</tr>
+										}
+
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
+				</div>
 
-					<div class="table100-body js-pscroll">
-						<table>
-							<tbody>
+			}
+			else
+			{
 
-								@foreach (var operation in Model.ViewOperations)
-								{
-									<tr class="row100 body" onclick="testFunction(@operation.operationID)">
-										<td class="cell100 column4">@operation.hospitalName</td>
-										<td class="cell100 column2">@operation.roomNO</td>
-										<td class="cell100 column3">@operation.patient.firstName @operation.patient.lastName</td>
-										<td class="cell100 column5">@operation.date.ToString("yyyy-MM-dd HH:mm:ss")</td>
-										<td class="cell100 column1">@operation.staff</td>
-									</tr>
-								}
+			<br />
+			<br />
 
-							</tbody>
-						</table>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-section">
+
+								Your search returned no results
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+
+				}
+
+
+
+
+
+
+
+			}
+
+
+
+
 	</div>
 
 
