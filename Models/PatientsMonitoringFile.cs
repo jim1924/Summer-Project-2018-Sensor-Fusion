@@ -5,14 +5,10 @@ using System.Threading.Tasks;
 
 namespace SensorFusion.Models
 {
-    public class PatientsMonitoringFile
+    public class PatientsMonitoringFile:InputFile
 	{
-		public long OperationID { get; set; }
-		public long size_bytes { get; set; }
-		public DateTime timeStamp { get; set; }
-		public string type { get; set; }
-		public string fileName { get; set; }
-		public string fullPath { get; set; }
+		public string machineType { get; set; }
+		public string machineModelNumber { get; set; }
 
 	}
 }

@@ -20,7 +20,7 @@
 			<td>Hospital</td>
 			<td>@Model.hospitalName</td>
 		<tr>
-			<td>Room Number</td>
+			<td>Operating Room Number</td>
 			<td>@Model.roomNO</td>
 		</tr>
 		<tr>
@@ -185,7 +185,7 @@
 		}
 
 		@{
-			if(Model.patientsMonitoringFile!=null)
+			if(Model.patientsMonitoringFile.timeStamp!=new DateTime())
 			{
 				<tr>
 					<td><b>Patient's monitoring file</b></td>

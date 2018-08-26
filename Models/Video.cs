@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace SensorFusion.Models
 {
-    public class Video
+    public class Video:InputFile
     {
-		public long OperationID { get; set; }
-		public long size_bytes { get; set; }
-		public DateTime timeStamp { get; set; }
-		public string type { get; set; }
 		public double duration { get; set; }
-		public string fileName { get; set; }
-		public string fullPath { get; set; }
+		public double AspectRatio { get; private set; }
+		public double FrameRate { get; private set; }
+		public string ScanType { get; private set; }
+		public string Codec { get; private set; }
 	}
 }

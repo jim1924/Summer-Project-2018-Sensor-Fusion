@@ -5,15 +5,12 @@ using System.Threading.Tasks;
 
 namespace SensorFusion.Models
 {
-    public class Patient
+    public class Patient:Participant
     {
 		public long patientID { get; set; }
-		public string firstName { get; set; }
-		public string lastName { get; set; }
-		public string address { get; set; }
-		public string postCode { get; set; }
-		public string phoneNO { get; set; }
-
+		public DateTime registrationDate { get; set; }
+		public int height { get; set; }
+		public float weight { get; set; }
 
 	}
 }

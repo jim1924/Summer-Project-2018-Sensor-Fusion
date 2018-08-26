@@ -380,7 +380,7 @@ namespace SensorFusion.Models
 						staff.lastName = reader.GetString("lastName");
 						staff.address = reader.GetString("address");
 						staff.hiringDate = reader.GetDateTime("hiringDate");
-						staff.phoneNo = reader.GetString("phoneNO");
+						staff.phoneNo = reader.GetString("phoneNo");
 						if (reader.IsDBNull(5))
 						{
 							staff.speciality = reader.GetString("speciality");
@@ -419,7 +419,7 @@ namespace SensorFusion.Models
 							lastName = reader.GetString("lastName"),
 							address = reader.GetString("address"),
 							postCode = reader.GetString("postCode"),
-							phoneNO = reader.GetString("phoneNO")
+							phoneNo = reader.GetString("phoneNO")
 						});
 					}
 				}

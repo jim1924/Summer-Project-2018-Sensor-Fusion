@@ -5,15 +5,14 @@ using System.Threading.Tasks;
 
 namespace SensorFusion.Models
 {
-    public class Audio
+    public class Audio:InputFile
     {
-		public long OperationID { get; set; }
-		public long size_bytes { get; set; }
-		public DateTime timeStamp { get; set; }
-		public string type { get; set; }
 		public double duration { get; set; }
-		public string fileName { get; set; }
-		public string fullPath { get; set; }
+		public string ChannelPositions { get; private set; }
+		public int Bitrate { get; private set; }
+		public int SamplingRate { get; private set; }
+		public string CompressionMode { get; private set; }
+		public string Codec { get; private set; }
 
 	}
 }
