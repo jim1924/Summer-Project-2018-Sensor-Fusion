@@ -31,7 +31,7 @@ namespace SensorFusion.ViewModels
 		public int operationTypeID { get; set; }
 		public DateTime UploadedDate  { get; set; }
 
-		//for manipulating
+		//helper objects for storing
 		public List<Video> videos { get; set; }
 		public List<Audio> audios { get; set; }
 		public PatientsMonitoringFile patientsMonitoringFile { get; set; }

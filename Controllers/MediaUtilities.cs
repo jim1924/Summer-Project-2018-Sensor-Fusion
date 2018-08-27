@@ -133,17 +133,7 @@ namespace SensorFusion.Controllers
 			return result;
 		}
 
-		public DateTime GetFileEarliestDate(string fileName)
-		{
-			DateTime earliest = new DateTime(9000, 1, 1);
-			earliest = (GetDateFromFileName(fileName).CompareTo(new DateTime()) != 0) ? GetDateFromFileName(fileName) : earliest;
-			//earliest is later than GetAudioCreationTime
-			earliest = (earliest.CompareTo(GetAudioCreationTime()) > 0) ? GetAudioCreationTime() : earliest;
-			earliest = (earliest.CompareTo(GetAudioLastAccessTime()) > 0) ? GetAudioLastAccessTime() : earliest;
-			earliest = (earliest.CompareTo(GetAudioLastModifiedTime()) > 0) ? GetAudioLastModifiedTime() : earliest;
-			earliest = (earliest.CompareTo(GetAudioLastWriteTime()) > 0) ? GetAudioLastWriteTime() : earliest;
-			return earliest;
-		}
+
 
 		public DateTime GetAudioEarliestDate(string fileName)
 		{
@@ -192,7 +182,17 @@ namespace SensorFusion.Controllers
 
 
 
-
+		public DateTime GetFileEarliestDate(string fileName)
+		{
+			DateTime earliest = new DateTime(9000, 1, 1);
+			earliest = (GetDateFromFileName(fileName).CompareTo(new DateTime()) != 0) ? GetDateFromFileName(fileName) : earliest;
+			//earliest is later than GetAudioCreationTime
+			earliest = (earliest.CompareTo(GetAudioCreationTime()) > 0) ? GetAudioCreationTime() : earliest;
+			earliest = (earliest.CompareTo(GetAudioLastAccessTime()) > 0) ? GetAudioLastAccessTime() : earliest;
+			earliest = (earliest.CompareTo(GetAudioLastModifiedTime()) > 0) ? GetAudioLastModifiedTime() : earliest;
+			earliest = (earliest.CompareTo(GetAudioLastWriteTime()) > 0) ? GetAudioLastWriteTime() : earliest;
+			return earliest;
+		}
 
 
 		public static DateTime GetDateFromFileName(string fileName)

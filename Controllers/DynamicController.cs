@@ -14,14 +14,10 @@ namespace SensorFusion.Controllers
 		{
 			_context = context;
 		}
-        public IActionResult Index()
-        {
-            return View();
-        }
 		public JsonResult UpdateRooms(int hospitalID)
 		{
 
-			var result=_context.UpdateRooms(hospitalID);
+			var result=_context.GetAllRoomsForHospitalID(hospitalID);
 			return Json(result);
 
 

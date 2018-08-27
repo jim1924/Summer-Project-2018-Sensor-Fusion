@@ -14,11 +14,6 @@ namespace SensorFusion.ViewModels
 		public DateTime date { get; set; }
 		public Patient patient { get; set; }
 		public string staff { get; set; }
-
-
-
-
-		//for details
 		public List<Video> videoFiles { get; set; }
 		public List<Audio> audioFiles { get; set; }
 		public PatientsMonitoringFile patientsMonitoringFile { get; set; }

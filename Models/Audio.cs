@@ -8,11 +8,11 @@ namespace SensorFusion.Models
     public class Audio:InputFile
     {
 		public double duration { get; set; }
-		public string ChannelPositions { get; private set; }
-		public int Bitrate { get; private set; }
-		public int SamplingRate { get; private set; }
-		public string CompressionMode { get; private set; }
-		public string Codec { get; private set; }
+		public string channelPositions { get; private set; }
+		public int bitrate { get; private set; }
+		public int samplingRate { get; private set; }
+		public string compressionMode { get; private set; }
+		public string codec { get; private set; }
 
 	}
 }

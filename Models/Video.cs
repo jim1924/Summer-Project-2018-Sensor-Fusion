@@ -8,9 +8,9 @@ namespace SensorFusion.Models
     public class Video:InputFile
     {
 		public double duration { get; set; }
-		public double AspectRatio { get; private set; }
-		public double FrameRate { get; private set; }
-		public string ScanType { get; private set; }
-		public string Codec { get; private set; }
+		public double aspectRatio { get; private set; }
+		public double frameRate { get; private set; }
+		public string scanType { get; private set; }
+		public string codec { get; private set; }
 	}
 }

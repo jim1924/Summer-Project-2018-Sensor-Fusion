@@ -9,16 +9,16 @@ namespace SensorFusion.Models
 {
 	public class DBContext
 	{
-		public string ConnectionString { get; set; }
+		public string _ConnectionString { get; set; }
 
 		public DBContext(string connectionString)
 		{
-			this.ConnectionString = connectionString;
+			this._ConnectionString = connectionString;
 		}
 
 		private MySqlConnection GetConnection()
 		{
-			return new MySqlConnection(ConnectionString);
+			return new MySqlConnection(_ConnectionString);
 		}
 
 		public IEnumerable<Hospital> GetAllHospitals()
@@ -244,8 +244,6 @@ namespace SensorFusion.Models
 
 		}
 
-
-
 		public string GetStaffForOperationID(long id)
 		{
 			List<Staff> list = new List<Staff>();
@@ -276,6 +274,7 @@ namespace SensorFusion.Models
 			return staff;
 
 		}
+
 		public List<Video> GetVideosForOperationID(long id)
 		{
 			List<Video> list = new List<Video>();
@@ -331,6 +330,7 @@ namespace SensorFusion.Models
 			return patientsFile;
 
 		}
+
 		public List<Audio> GetAudiosForOperationID(long id)
 		{
 			List<Audio> list = new List<Audio>();
@@ -396,8 +396,6 @@ namespace SensorFusion.Models
 
 		}
 
-
-
 		public IEnumerable<Patient> GetAllPatients()
 		{
 
@@ -428,7 +426,7 @@ namespace SensorFusion.Models
 			return list;
 		}
 
-		public List<OperatingRoom> UpdateRooms(int hospitalID)
+		public List<OperatingRoom> GetAllRoomsForHospitalID(int hospitalID)
 		{
 
 			List<OperatingRoom> list = new List<OperatingRoom>();
@@ -438,35 +436,6 @@ namespace SensorFusion.Models
 			{
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand("SELECT * FROM hospital_operating_room WHERE hospitalID='" + hospitalID + "'", conn);
-				using (MySqlDataReader reader = cmd.ExecuteReader())
-				{
-					while (reader.Read())
-					{
-						list.Add(new OperatingRoom()
-						{
-							hospitalID = reader.GetInt32("hospitalID"),
-							roomNO = reader.GetString("roomNO"),
-							size = reader.GetInt32("size_m2")
-
-						});
-					}
-				}
-			}
-			return list;
-
-		}
-
-
-		public List<OperatingRoom> NewOperation(NewOperationFormModel model)
-		{
-
-			List<OperatingRoom> list = new List<OperatingRoom>();
-
-
-			using (MySqlConnection conn = GetConnection())
-			{
-				conn.Open();
-				MySqlCommand cmd = new MySqlCommand("SELECT * FROM hospital_operating_room WHERE hospitalID='" + model.hospitalID + "'", conn);
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
