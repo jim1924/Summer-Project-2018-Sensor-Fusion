@@ -30,8 +30,8 @@ namespace SensorFusion.Controllers
 		[HttpGet]
 		public IActionResult Index()
 		{
-			var searchOperationModel = new SearchOperationModel();
-			var newOperationModel = new NewOperationFormModel();
+			var searchOperationModel = new SearchOperationViewModel();
+			var newOperationModel = new NewOperationFormViewModel();
 
 			newOperationModel.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
 			newOperationModel.staff = new SelectList(_context.GetAllStaff().Select(x => new SelectListItem { Value = x.staffID.ToString(), Text = "ID: " + x.staffID + " " + x.firstName + " " + x.lastName }), "Value", "Text");
@@ -54,7 +54,7 @@ namespace SensorFusion.Controllers
 
 		[HttpPost]
 		[AutoValidateAntiforgeryToken]
-		public IActionResult Index(SearchOperationModel model)
+		public IActionResult Index(SearchOperationViewModel model)
 		{
 
 
@@ -66,7 +66,7 @@ namespace SensorFusion.Controllers
 			bool patientSelected = model.searchFields.patientID != 0;
 
 
-			var searchOperationModel = new SearchOperationModel();
+			var searchOperationModel = new SearchOperationViewModel();
 
 
 
@@ -92,7 +92,7 @@ namespace SensorFusion.Controllers
 					filters.patientID = model.searchFields.patientID;
 				}
 
-				var newOperationModel = new NewOperationFormModel();
+				var newOperationModel = new NewOperationFormViewModel();
 
 				newOperationModel.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
 				newOperationModel.staff = new SelectList(_context.GetAllStaff().Select(x => new SelectListItem { Value = x.staffID.ToString(), Text = "ID: " + x.staffID + " " + x.firstName + " " + x.lastName }), "Value", "Text");
@@ -138,7 +138,7 @@ namespace SensorFusion.Controllers
 		[HttpGet]
 		public IActionResult NewOperation()
         {
-			var model = new NewOperationFormModel();
+			var model = new NewOperationFormViewModel();
 
 			model.typesOfOperation = new SelectList(_context.GetAllTypes().Select(x => new SelectListItem { Value = x.operationTypeID.ToString(), Text = x.name }), "Value", "Text");
 			model.staff = new SelectList(_context.GetAllStaff().Select(x => new SelectListItem { Value = x.staffID.ToString(), Text ="ID: "+ x.staffID+ " "+x.firstName +" "+ x.lastName }), "Value", "Text");
@@ -156,7 +156,7 @@ namespace SensorFusion.Controllers
 
 		[HttpPost]
 		[AutoValidateAntiforgeryToken]
-		public async Task<IActionResult> NewOperation(NewOperationFormModel model )
+		public async Task<IActionResult> NewOperation(NewOperationFormViewModel model )
 		{
 			BlobsController storage = new BlobsController(_hostingEnvironment);
 			var path = _hostingEnvironment.WebRootPath;

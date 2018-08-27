@@ -454,7 +454,7 @@ namespace SensorFusion.Models
 
 		}
 
-		public void InsertOperation(NewOperationFormModel model)
+		public void InsertOperation(NewOperationFormViewModel model)
 		{
 			model.UploadedDate = new DateTime();
 			model.UploadedDate = DateTime.Now;

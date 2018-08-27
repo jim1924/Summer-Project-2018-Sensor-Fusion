@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SensorFusion.ViewModels
 {
-    public class NewOperationFormModel
+    public class NewOperationFormViewModel
     {
 		//for displaying
 		public IEnumerable<SelectListItem> hospitals { get; set; }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace SensorFusion.ViewModels
 {
-    public class SearchOperationModel
+    public class SearchOperationViewModel
     {
-		public NewOperationFormModel searchFields { get; set; }
+		public NewOperationFormViewModel searchFields { get; set; }
 
 
 		public IEnumerable<SingleOperationViewModel> ViewOperations { get; set; }
