@@ -1,6 +1,5 @@
 ﻿using MediaInfoLib;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Linq;
@@ -268,9 +267,6 @@ namespace SensorFusion.Controllers
 		public string EncodedDate { get; private set; }
 		public long FileSize { get; private set; }
 
-
-
-
 		public VideoInfo(MediaInfo mi)
 		{
 			Codec = mi.Get(StreamKind.Video, 0, "Format");
@@ -286,14 +282,8 @@ namespace SensorFusion.Controllers
 			TaggedDate = mi.Get(StreamKind.Video, 0, "Tagged_Date");
 			EncodedDate = mi.Get(StreamKind.General, 0, "Encoded_Date");
 			FileSize = Int64.Parse(mi.Get(StreamKind.General, 0, "FileSize"));
-
-
 		}
 	}
-
-
-
-
 
 	public class AudioInfo
 	{
@@ -308,9 +298,6 @@ namespace SensorFusion.Controllers
 		public string EncodedDate { get; private set; }
 		public string FileSize { get; set; }
 		public string StreamSize { get; set; }
-
-
-
 
 		public AudioInfo(MediaInfo mi)
 		{
@@ -327,6 +314,8 @@ namespace SensorFusion.Controllers
 			StreamSize = mi.Get(StreamKind.Audio, 0, "StreamSize");
 		}
 	}
+
+
 }
 
 

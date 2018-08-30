@@ -43,10 +43,6 @@ namespace SensorFusion.Controllers
 			newOperationModel.rooms = defaultSelection;
 			searchOperationModel.ViewOperations = _context.Get20MostRecentOperations();
 			searchOperationModel.searchFields = newOperationModel;
-
-
-
-
 			return View(searchOperationModel);
 		}
 
@@ -56,8 +52,6 @@ namespace SensorFusion.Controllers
 		[AutoValidateAntiforgeryToken]
 		public IActionResult Index(SearchOperationViewModel model)
 		{
-
-
 			bool hospitalSelected = model.searchFields.hospitalID != 0;
 			bool roomSelected = !model.searchFields.roomNo.Equals("error");
 			bool fromDateSelected = !(model.searchFields.fromDate == new DateTime());
@@ -108,11 +102,7 @@ namespace SensorFusion.Controllers
 
 				searchOperationModel.ViewOperations = _context.GetFilteredOperations(filters);
 
-				
-
 				return View(searchOperationModel);
-
-
 			}
 
 
