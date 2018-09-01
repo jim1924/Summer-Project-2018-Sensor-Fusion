@@ -27,8 +27,6 @@ namespace SensorFusion.Controllers
 		}
 		public long GetVideoSize()
 		{
-			Console.WriteLine("The path is:"+ path);
-			path = "C:\\Users\\Dimitris Selal\\source\\repos\\SensorFusion\\SensorFusion\\wwwroot\\TempFiles\\video1.mp4";
 			mi.Open(path);
 			var videoInfo = new VideoInfo(mi);
 			long size = videoInfo.FileSize;
