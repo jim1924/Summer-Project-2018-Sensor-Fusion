@@ -7,15 +7,15 @@ using System.Linq;
 namespace SensorFusion.Controllers
 {
 	public class MediaUtilities
-    {
+	{
 		private IHostingEnvironment _env;
 		string path;
 		MediaInfo mi = new MediaInfo();
 
-		public MediaUtilities(IHostingEnvironment env,string fileName)
+		public MediaUtilities(IHostingEnvironment env, string fileName)
 		{
 			_env = env;
-			path= _env.WebRootPath +"\\TempFiles\\"+fileName;
+			path = _env.WebRootPath + "\\TempFiles\\" + fileName;
 		}
 		public TimeSpan GetVideoDuration()
 		{
@@ -27,7 +27,8 @@ namespace SensorFusion.Controllers
 		}
 		public long GetVideoSize()
 		{
-
+			Console.WriteLine("The path is:"+ path);
+			path = "C:\\Users\\Dimitris Selal\\source\\repos\\SensorFusion\\SensorFusion\\wwwroot\\TempFiles\\video1.mp4";
 			mi.Open(path);
 			var videoInfo = new VideoInfo(mi);
 			long size = videoInfo.FileSize;

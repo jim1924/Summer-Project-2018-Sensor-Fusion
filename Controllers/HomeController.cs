@@ -148,6 +148,9 @@ namespace SensorFusion.Controllers
 		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> NewOperation(NewOperationFormViewModel model )
 		{
+
+
+
 			BlobsController storage = new BlobsController(_hostingEnvironment);
 			var path = _hostingEnvironment.WebRootPath;
 			long nextID =_context.GetNextOperationID();
