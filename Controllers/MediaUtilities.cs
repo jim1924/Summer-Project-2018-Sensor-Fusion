@@ -8,6 +8,7 @@ namespace SensorFusion.Controllers
 {
 	public class MediaUtilities
 	{
+
 		private IHostingEnvironment _env;
 		string path;
 		MediaInfo mi = new MediaInfo();
