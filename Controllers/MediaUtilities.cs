@@ -322,17 +322,3 @@ namespace SensorFusion.Controllers
 
 
 
-
-
-//var ffProbe = new NReco.VideoInfo.FFProbe();
-//var videoInfo = ffProbe.GetMediaInfo(path);
-//Console.WriteLine(videoInfo.FormatName);
-//Console.WriteLine(videoInfo.Duration);
-
-
-
-
-
-//IMediaInfo mediaInfo = await MediaInfo.Get(path);
-//var videoDuration = mediaInfo.VideoStreams.First().Duration;
-//Console.WriteLine("THE FUCKA DURATION IS "+videoDuration);

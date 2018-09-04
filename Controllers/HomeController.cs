@@ -98,7 +98,6 @@ namespace SensorFusion.Controllers
 				newOperationModel.rooms = defaultSelection;
 				searchOperationModel.searchFields = newOperationModel;
 
-				searchOperationModel.ViewOperations = _context.Get20MostRecentOperations();
 
 				searchOperationModel.ViewOperations = _context.GetFilteredOperations(filters);
 
