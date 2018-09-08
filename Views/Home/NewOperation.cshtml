@@ -191,14 +191,14 @@
 
 		var videoFiles = $('input#videoFiles')[0].files;
 		var audioFiles = $('input#audioFiles')[0].files;
-		var monitorFiles = $('input#monitorFiles')[0].files;
+		var monitorFiles = $('input#monitorFile')[0].files;
 
 		if (videoFiles.length == 0 && audioFiles.length == 0 && monitorFiles.length == 0) {
-		alert("You have to select at least one video file,audio file, or patient's monitoring file");
-		return false;
+			alert("You have to select at least one video file,audio file, or patient's monitoring file");
+			return false;
 		} else if (videoFiles.length > 3 && audioFiles.length > 3 && monitorFiles.length > 1) {
-		alert("You can only upload at maximum 3 video files and 3 audio files and 1 patient monitoring file");
-		return false;
+			alert("You can only upload at maximum 3 video files and 3 audio files and 1 patient monitoring file");
+			return false;
 		}
 
 		for (var i = 0; i < videoFiles.length; i++) {
@@ -213,6 +213,7 @@
 				return false;
 			}
 		}
+
 
 		return true;
 

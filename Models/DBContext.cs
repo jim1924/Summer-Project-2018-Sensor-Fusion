@@ -109,7 +109,7 @@ namespace SensorFusion.Models
 			{
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand(
-				"select twentyoperations.operationID,hospital.name AS 'Hospital Name',hospital_operating_room.roomNO,twentyoperations.dateStamp,patient.firstName AS 'Patients first name',patient.lastName AS 'Patients last name',patient.patientID " +
+				"select twentyoperations.operationID,hospital.name AS 'Hospital Name',uploadedDate,hospital_operating_room.roomNO,twentyoperations.dateStamp,patient.firstName AS 'Patients first name',patient.lastName AS 'Patients last name',patient.patientID " +
 				" from twentyoperations inner join hospital ON twentyoperations.hospitalID = hospital.hospitalID 		" +
 				" inner join hospital_operating_room ON twentyoperations.roomNO = hospital_operating_room.roomNO" +
 				" inner join patient ON twentyoperations.patientID = patient.patientID ", conn);
@@ -119,6 +119,7 @@ namespace SensorFusion.Models
 					{
 						SingleOperationViewModel operation = new SingleOperationViewModel();
 						operation.date = (DateTime) reader.GetMySqlDateTime("dateStamp");
+						operation.date = (DateTime)reader.GetMySqlDateTime("uploadedDate");
 						operation.hospitalName = reader.GetString("Hospital Name");
 						operation.operationID = reader.GetInt64("operationID");
 						operation.patient = new Patient();
@@ -132,8 +133,8 @@ namespace SensorFusion.Models
 					}
 				}
 			}
-
-			return list;
+			List<SingleOperationViewModel> SortedList = list.OrderBy(o => o.uploadedDate).ToList();
+			return SortedList;
 		}
 
 		public IEnumerable<SingleOperationViewModel> GetFilteredOperations(Operation filters)
